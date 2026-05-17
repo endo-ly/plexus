@@ -70,7 +70,7 @@ gateway/deploy/
 |---|---|
 | `NoNewPrivileges=true` | 権限昇格禁止 |
 | `ProtectSystem=strict` | ファイルシステムを読み取り専用に（`ReadWritePaths` のみ書き込み可） |
-| `PrivateTmp=true` | プライベート `/tmp` |
+| `ReadWritePaths=<workdir> /tmp /run` | Gateway の作業ディレクトリと tmux runtime socket 用パスのみ書き込み可 |
 
 ### 環境変数
 

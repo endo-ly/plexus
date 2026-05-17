@@ -18,7 +18,7 @@ SyslogIdentifier=plexus-gateway
 # セキュリティ
 NoNewPrivileges=true
 ProtectSystem=strict
-ReadWritePaths=__WORKDIR__
+ReadWritePaths=__WORKDIR__ /tmp /run
 
 # 環境変数ファイル（.env がある場合）
 EnvironmentFile=-__WORKDIR__/gateway/.env
