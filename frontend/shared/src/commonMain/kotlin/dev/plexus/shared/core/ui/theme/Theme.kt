@@ -129,7 +129,7 @@ private val DarkColorScheme =
     )
 
 @Composable
-fun PlexusTheme(
+fun MuxportTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
@@ -138,7 +138,7 @@ fun PlexusTheme(
     CompositionLocalProvider(
         LocalPlexusDimens provides PlexusDimens(),
         LocalPlexusShapes provides PlexusShapes(),
-        LocalPlexusExtendedColors provides PlexusExtendedColors(),
+        LocalMuxportExtendedColors provides MuxportExtendedColors(),
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

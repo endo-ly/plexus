@@ -15,7 +15,7 @@ fun App() {
         Surface(modifier = Modifier.fillMaxSize()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "Hello from Plexus KMP!\n${getPlatformName()}",
+                    text = "Hello from Muxport KMP!\n${getPlatformName()}",
                     style = MaterialTheme.typography.headlineMedium,
                 )
             }

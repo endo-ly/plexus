@@ -1,4 +1,4 @@
-# Plexus Gateway
+# Muxport Gateway
 
 tmux session への WebSocket 接続、snapshot 取得、push 通知を提供する runtime API です。
 

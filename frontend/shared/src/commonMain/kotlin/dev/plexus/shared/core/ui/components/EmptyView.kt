@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import dev.plexus.shared.core.ui.theme.PlexusThemeTokens
+import dev.plexus.shared.core.ui.theme.MuxportThemeTokens
 
 /**
  * 空状態表示コンポーネント
@@ -21,7 +21,7 @@ fun EmptyView(
     modifier: Modifier = Modifier,
     message: String = "No content",
 ) {
-    val dimens = PlexusThemeTokens.dimens
+    val dimens = MuxportThemeTokens.dimens
 
     Box(
         modifier =

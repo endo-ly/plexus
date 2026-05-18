@@ -9,12 +9,12 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 /**
- * Plexus Application class
+ * Muxport Application class
  *
  * Initializes Koin dependency injection container on app startup.
  * Must be declared in AndroidManifest.xml as the application class.
  */
-class PlexusApplication : Application() {
+class MuxportApplication : Application() {
     /**
      * Application entry point
      *
@@ -28,7 +28,7 @@ class PlexusApplication : Application() {
 
         // Initialize Koin DI container
         startKoin {
-            androidContext(this@PlexusApplication)
+            androidContext(this@MuxportApplication)
             modules(appModule, androidModule, terminalModule)
         }
     }

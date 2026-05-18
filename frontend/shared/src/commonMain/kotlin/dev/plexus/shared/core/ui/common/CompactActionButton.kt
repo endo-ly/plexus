@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import dev.plexus.shared.core.ui.theme.PlexusThemeTokens
+import dev.plexus.shared.core.ui.theme.MuxportThemeTokens
 
 /**
  * コンパクト表示用の共通アクションボタン。
@@ -25,8 +25,8 @@ internal fun CompactActionButton(
     testTag: String,
     text: String? = null,
 ) {
-    val dimens = PlexusThemeTokens.dimens
-    val shapes = PlexusThemeTokens.shapes
+    val dimens = MuxportThemeTokens.dimens
+    val shapes = MuxportThemeTokens.shapes
     val buttonHeight = dimens.space28
     val buttonPadding = PaddingValues(horizontal = dimens.space8)
     val iconSize = dimens.iconSizeSmall

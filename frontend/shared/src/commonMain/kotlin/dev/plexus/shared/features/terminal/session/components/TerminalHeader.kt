@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import dev.plexus.shared.core.ui.theme.PlexusThemeTokens
+import dev.plexus.shared.core.ui.theme.MuxportThemeTokens
 import dev.plexus.shared.core.ui.theme.monospaceBody
 import dev.plexus.shared.core.ui.theme.monospaceBodyMedium
 
@@ -47,9 +47,9 @@ fun TerminalHeader(
     onBack: () -> Unit,
     onOpenCopyMode: () -> Unit,
 ) {
-    val dimens = PlexusThemeTokens.dimens
-    val shapes = PlexusThemeTokens.shapes
-    val extendedColors = PlexusThemeTokens.extendedColors
+    val dimens = MuxportThemeTokens.dimens
+    val shapes = MuxportThemeTokens.shapes
+    val extendedColors = MuxportThemeTokens.extendedColors
 
     CenterAlignedTopAppBar(
         title = {

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# plexus-gateway systemd サービス管理
+# muxport-gateway systemd サービス管理
 #
 # 使い方:
 #   ./plexus install [WORKDIR]   # systemd に登録して起動
@@ -127,7 +127,7 @@ do_install() {
 
   uv_path="$(find_uv)"
 
-  info "Plexus Gateway を systemd にインストールします"
+  info "Muxport Gateway を systemd にインストールします"
   info "  WorkDir: ${workdir}"
   info "  uv:      ${uv_path}"
   info "  User:    ${SUDO_USER:-$(whoami)}"
@@ -171,7 +171,7 @@ do_install() {
 do_uninstall() {
   check_root
 
-  info "Plexus Gateway をアンインストールします"
+  info "Muxport Gateway をアンインストールします"
 
   if [[ -f "$SERVICE_FILE" ]]; then
     systemctl disable --now "$SERVICE_NAME" 2>/dev/null || true
@@ -208,7 +208,7 @@ do_update() {
 
   local workdir="${WORKDIR_DEFAULT}"
 
-  info "Plexus Gateway を更新します"
+  info "Muxport Gateway を更新します"
 
   cd "$workdir"
 
@@ -239,7 +239,7 @@ do_restart() {
   check_root
   check_installed
 
-  info "Plexus Gateway を再起動します"
+  info "Muxport Gateway を再起動します"
 
   systemctl restart "$SERVICE_NAME"
   ok "サービスを再起動しました"

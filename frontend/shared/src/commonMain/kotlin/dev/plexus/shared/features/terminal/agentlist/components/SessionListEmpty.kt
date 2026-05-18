@@ -16,11 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import dev.plexus.shared.core.ui.theme.PlexusThemeTokens
+import dev.plexus.shared.core.ui.theme.MuxportThemeTokens
 
 @Composable
 fun SessionListEmpty(modifier: Modifier = Modifier) {
-    val dimens = PlexusThemeTokens.dimens
+    val dimens = MuxportThemeTokens.dimens
 
     Column(
         modifier = modifier.fillMaxSize().padding(dimens.space16),

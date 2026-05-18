@@ -25,7 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.plexus.shared.core.ui.common.testTagResourceId
-import dev.plexus.shared.core.ui.theme.PlexusThemeTokens
+import dev.plexus.shared.core.ui.theme.MuxportThemeTokens
 import dev.plexus.shared.features.terminal.TerminalTestTags
 
 @Composable
@@ -76,9 +76,9 @@ fun TerminalFloatingControlPill(
     onCopy: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val dimens = PlexusThemeTokens.dimens
-    val shapes = PlexusThemeTokens.shapes
-    val indicatorColor = if (isConnected) PlexusThemeTokens.extendedColors.success else MaterialTheme.colorScheme.error
+    val dimens = MuxportThemeTokens.dimens
+    val shapes = MuxportThemeTokens.shapes
+    val indicatorColor = if (isConnected) MuxportThemeTokens.extendedColors.success else MaterialTheme.colorScheme.error
 
     Surface(
         modifier = modifier.testTagResourceId(TerminalTestTags.TERMINAL_STATUS_PILL),

@@ -47,7 +47,7 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import dev.plexus.shared.core.platform.isValidUrl
 import dev.plexus.shared.core.settings.AppTheme
 import dev.plexus.shared.core.ui.components.SecretTextField
-import dev.plexus.shared.core.ui.theme.PlexusThemeTokens
+import dev.plexus.shared.core.ui.theme.MuxportThemeTokens
 import dev.plexus.shared.core.ui.theme.monospaceBody
 import dev.plexus.shared.core.ui.theme.monospaceBodyMedium
 import dev.plexus.shared.core.ui.theme.monospaceLabelSmall
@@ -115,7 +115,7 @@ class GatewaySettingsScreen(
 
 @Composable
 private fun SettingsHeader(onBack: () -> Unit) {
-    val dimens = PlexusThemeTokens.dimens
+    val dimens = MuxportThemeTokens.dimens
 
     Box(
         modifier =
@@ -166,7 +166,7 @@ private fun GatewaySettingsContent(
     isSaving: Boolean,
     isSaveSuccess: Boolean = false,
 ) {
-    val dimens = PlexusThemeTokens.dimens
+    val dimens = MuxportThemeTokens.dimens
     val scrollState = rememberScrollState()
 
     Column(
@@ -206,13 +206,13 @@ private fun GatewaySettingsContent(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 textStyle = MaterialTheme.typography.monospaceBody,
-                shape = PlexusThemeTokens.shapes.radiusMd,
+                shape = MuxportThemeTokens.shapes.radiusMd,
                 isError = gatewayUrl.isNotBlank() && !isValidUrl(gatewayUrl),
                 colors =
                     OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
                         unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-                        focusedBorderColor = PlexusThemeTokens.extendedColors.success.copy(alpha = 0.5f),
+                        focusedBorderColor = MuxportThemeTokens.extendedColors.success.copy(alpha = 0.5f),
                         unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
                         errorBorderColor = MaterialTheme.colorScheme.error,
                     ),
@@ -250,12 +250,12 @@ private fun GatewaySettingsContent(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 textStyle = MaterialTheme.typography.monospaceBody,
-                shape = PlexusThemeTokens.shapes.radiusMd,
+                shape = MuxportThemeTokens.shapes.radiusMd,
                 colors =
                     OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
                         unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-                        focusedBorderColor = PlexusThemeTokens.extendedColors.success.copy(alpha = 0.5f),
+                        focusedBorderColor = MuxportThemeTokens.extendedColors.success.copy(alpha = 0.5f),
                         unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
                     ),
             )
@@ -291,9 +291,9 @@ private fun SettingsCard(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    val dimens = PlexusThemeTokens.dimens
-    val shapes = PlexusThemeTokens.shapes
-    val extendedColors = PlexusThemeTokens.extendedColors
+    val dimens = MuxportThemeTokens.dimens
+    val shapes = MuxportThemeTokens.shapes
+    val extendedColors = MuxportThemeTokens.extendedColors
 
     Column(
         modifier =
@@ -331,7 +331,7 @@ private fun ThemePillSelector(
     selectedTheme: AppTheme,
     onThemeSelected: (AppTheme) -> Unit,
 ) {
-    val dimens = PlexusThemeTokens.dimens
+    val dimens = MuxportThemeTokens.dimens
 
     Row(horizontalArrangement = Arrangement.spacedBy(dimens.space8)) {
         AppTheme.entries.forEach { theme ->
@@ -350,9 +350,9 @@ private fun ThemePill(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
-    val dimens = PlexusThemeTokens.dimens
-    val shapes = PlexusThemeTokens.shapes
-    val extendedColors = PlexusThemeTokens.extendedColors
+    val dimens = MuxportThemeTokens.dimens
+    val shapes = MuxportThemeTokens.shapes
+    val extendedColors = MuxportThemeTokens.extendedColors
 
     val backgroundColor =
         if (selected) {
@@ -410,9 +410,9 @@ private fun TerminalSaveButton(
     isSaving: Boolean,
     isSaveSuccess: Boolean = false,
 ) {
-    val dimens = PlexusThemeTokens.dimens
-    val shapes = PlexusThemeTokens.shapes
-    val extendedColors = PlexusThemeTokens.extendedColors
+    val dimens = MuxportThemeTokens.dimens
+    val shapes = MuxportThemeTokens.shapes
+    val extendedColors = MuxportThemeTokens.extendedColors
 
     val isButtonEnabled = enabled && !isSaving && !isSaveSuccess
 

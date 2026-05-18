@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import dev.plexus.shared.core.ui.theme.PlexusThemeTokens
+import dev.plexus.shared.core.ui.theme.MuxportThemeTokens
 
 /**
  * ローディング表示コンポーネント
@@ -24,7 +24,7 @@ fun LoadingView(
     message: String = "Loading...",
     height: Dp? = null,
 ) {
-    val resolvedHeight = height ?: PlexusThemeTokens.dimens.listLoadingHeight
+    val resolvedHeight = height ?: MuxportThemeTokens.dimens.listLoadingHeight
 
     Box(
         modifier =

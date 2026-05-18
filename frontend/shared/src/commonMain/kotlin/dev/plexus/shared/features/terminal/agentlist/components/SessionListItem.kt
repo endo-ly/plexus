@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.sp
 import dev.plexus.shared.core.domain.model.terminal.Session
 import dev.plexus.shared.core.ui.common.testTagResourceId
 import dev.plexus.shared.core.ui.common.toRelativeTimeString
-import dev.plexus.shared.core.ui.theme.PlexusThemeTokens
+import dev.plexus.shared.core.ui.theme.MuxportThemeTokens
 import dev.plexus.shared.core.ui.theme.monospaceBody
 import dev.plexus.shared.core.ui.theme.monospaceLabelSmall
 import dev.plexus.shared.features.terminal.TerminalTestTags
@@ -82,9 +82,9 @@ fun SessionListItem(
     onDeleteSession: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
-    val dimens = PlexusThemeTokens.dimens
-    val shapes = PlexusThemeTokens.shapes
-    val extendedColors = PlexusThemeTokens.extendedColors
+    val dimens = MuxportThemeTokens.dimens
+    val shapes = MuxportThemeTokens.shapes
+    val extendedColors = MuxportThemeTokens.extendedColors
     val previewLines = previewDisplayLines(session)
     val subtitle = sessionSubtitle(session)
     val previewScrollState = rememberScrollState()
@@ -306,8 +306,8 @@ private fun FolderBadge(
     path: String,
     modifier: Modifier = Modifier,
 ) {
-    val dimens = PlexusThemeTokens.dimens
-    val shapes = PlexusThemeTokens.shapes
+    val dimens = MuxportThemeTokens.dimens
+    val shapes = MuxportThemeTokens.shapes
     val dirName = path.lastPathSegment()
 
     Box(

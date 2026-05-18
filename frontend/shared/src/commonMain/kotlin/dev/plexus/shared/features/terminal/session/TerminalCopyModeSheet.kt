@@ -31,7 +31,7 @@ import dev.plexus.shared.core.domain.model.terminal.TerminalSnapshot
 import dev.plexus.shared.core.domain.repository.TerminalRepository
 import dev.plexus.shared.core.ui.components.ErrorView
 import dev.plexus.shared.core.ui.components.LoadingView
-import dev.plexus.shared.core.ui.theme.PlexusThemeTokens
+import dev.plexus.shared.core.ui.theme.MuxportThemeTokens
 import dev.plexus.shared.core.ui.theme.monospaceBody
 import org.koin.compose.koinInject
 
@@ -42,7 +42,7 @@ fun TerminalCopyModeSheet(
     onDismiss: () -> Unit,
 ) {
     val repository = koinInject<TerminalRepository>()
-    val dimens = PlexusThemeTokens.dimens
+    val dimens = MuxportThemeTokens.dimens
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var reloadToken by remember(agentId) { mutableStateOf(0) }
     var activeRequestId by remember(agentId) { mutableStateOf(0) }

@@ -14,8 +14,8 @@ import androidx.core.content.getSystemService
  */
 object NotificationChannelManager {
     private const val CHANNEL_ID = "plexus_terminal"
-    private const val CHANNEL_NAME = "Plexus Terminal"
-    private const val CHANNEL_DESCRIPTION = "Notifications for Plexus terminal events"
+    private const val CHANNEL_NAME = "Muxport Terminal"
+    private const val CHANNEL_DESCRIPTION = "Notifications for Muxport terminal events"
 
     /**
      * 通知チャンネルを作成する

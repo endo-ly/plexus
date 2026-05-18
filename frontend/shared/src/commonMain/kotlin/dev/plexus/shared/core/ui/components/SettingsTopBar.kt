@@ -9,7 +9,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import dev.plexus.shared.core.ui.theme.PlexusThemeTokens
+import dev.plexus.shared.core.ui.theme.MuxportThemeTokens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -17,8 +17,8 @@ internal fun SettingsTopBar(
     title: String,
     onBack: () -> Unit,
 ) {
-    val dimens = PlexusThemeTokens.dimens
-    val shapes = PlexusThemeTokens.shapes
+    val dimens = MuxportThemeTokens.dimens
+    val shapes = MuxportThemeTokens.shapes
 
     CenterAlignedTopAppBar(
         title = { Text(title) },

@@ -1,4 +1,4 @@
-"""Terminal Gateway Service for Plexus.
+"""Terminal Gateway Service for Muxport.
 
 モバイルtmuxアクセスとプッシュ通知を提供するGatewayサービス。
 """

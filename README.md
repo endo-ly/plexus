@@ -1,6 +1,7 @@
-# Plexus
+# Muxport
 
-Plexus is a tmux-centered runtime platform for AI agents and workers.
+Muxport is a tmux + WebSocket + mobile infrastructure tool.
+It makes tmux sessions reachable from your phone.
 
 Concept documents:
 
@@ -8,26 +9,24 @@ Concept documents:
 - Japanese: `docs/CONCEPT.ja.md`
 - Architecture: `docs/10.architecture/`
 
-Plexus is built around two connected surfaces:
+Muxport consists of two components:
 
-- `gateway/`: runtime API for tmux session list, snapshot, websocket attach, push, and webhook handling
-- `frontend/`: Android terminal client used to access the runtime from mobile
+- `gateway/`: Starlette-based API for tmux session management, WebSocket terminal, push notifications, and webhook handling
+- `frontend/`: Android terminal client to access tmux sessions from mobile
 
 ## Scope
 
-Plexus owns runtime-oriented capabilities:
+Muxport owns runtime-oriented capabilities:
 
 - terminal access
 - tmux session lifecycle
 - runtime-facing push notifications
-- worker execution control
-- future orchestration surfaces
 
 ## Repository Layout
 
 ```text
 plexus/
-├── docs/        # runtime, terminal, FCM, webhook, and orchestration notes
+├── docs/        # terminal, FCM, webhook, and deployment notes
 ├── frontend/    # Android terminal client (KMP + Compose Multiplatform)
 ├── gateway/     # Starlette-based runtime API
 └── maestro/     # E2E flows for terminal UI

@@ -48,7 +48,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.plexus.shared.core.domain.model.terminal.Session
 import dev.plexus.shared.core.ui.common.ListStateContent
-import dev.plexus.shared.core.ui.theme.PlexusThemeTokens
+import dev.plexus.shared.core.ui.theme.MuxportThemeTokens
 import dev.plexus.shared.core.ui.theme.monospaceLabelSmall
 
 /**
@@ -82,9 +82,9 @@ fun SessionList(
     onDeleteSession: ((String) -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
-    val dimens = PlexusThemeTokens.dimens
-    val shapes = PlexusThemeTokens.shapes
-    val extendedColors = PlexusThemeTokens.extendedColors
+    val dimens = MuxportThemeTokens.dimens
+    val shapes = MuxportThemeTokens.shapes
+    val extendedColors = MuxportThemeTokens.extendedColors
     val sessionCount = sessions.size
 
     var showCreateDialog by rememberSaveable { mutableStateOf(false) }
@@ -284,7 +284,7 @@ private fun CreateSessionDialog(
 
 private val dimens
     @Composable
-    get() = PlexusThemeTokens.dimens
+    get() = MuxportThemeTokens.dimens
 
 @Composable
 private fun SessionListContent(
@@ -294,7 +294,7 @@ private fun SessionListContent(
     onDeleteSession: ((String) -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
-    val dimens = PlexusThemeTokens.dimens
+    val dimens = MuxportThemeTokens.dimens
     val listState = rememberLazyListState()
     LazyColumn(
         modifier = modifier.padding(vertical = dimens.space8),

@@ -1,18 +1,18 @@
 # Gateway systemd 自動起動
 
-Plexus Gateway を systemd サービスとして登録し、OS 起動時に自動的に立ち上げる方法。
+Muxport Gateway を systemd サービスとして登録し、OS 起動時に自動的に立ち上げる方法。
 
 ## 前提
 
 - Linux（systemd 採用ディストリビューション）
 - [uv](https://docs.astral.sh/uv/) がインストール済み
-- Plexus リポジトリがクローン済み
+- Muxport リポジトリがクローン済み
 
 ## クイックスタート
 
 ```bash
-cd /path/to/plexus
-sudo bash gateway/deploy/plexus install
+cd /path/to/muxport
+sudo bash gateway/deploy/muxport install
 ```
 
 これでサービス登録、有効化、起動まで完了する。
@@ -21,28 +21,28 @@ sudo bash gateway/deploy/plexus install
 
 | コマンド | 説明 |
 |---|---|
-| `sudo ./plexus install` | デフォルトパスでインストール・起動 |
-| `sudo ./plexus install /opt/plexus` | パス指定でインストール |
-| `sudo ./plexus uninstall` | 停止・登録解除 |
-| `sudo ./plexus update` | コード更新 + 再起動 |
-| `sudo ./plexus restart` | 再起動 |
-| `./plexus logs [-f] [-n N]` | ログ表示 |
-| `./plexus status` | 状態確認（root 不要） |
+| `sudo ./muxport install` | デフォルトパスでインストール・起動 |
+| `sudo ./muxport install /opt/muxport` | パス指定でインストール |
+| `sudo ./muxport uninstall` | 停止・登録解除 |
+| `sudo ./muxport update` | コード更新 + 再起動 |
+| `sudo ./muxport restart` | 再起動 |
+| `./muxport logs [-f] [-n N]` | ログ表示 |
+| `./muxport status` | 状態確認（root 不要） |
 
 ## 運用コマンド
 
 ```bash
 # ログ追跡
-sudo journalctl -u plexus-gateway -f
+sudo journalctl -u muxport-gateway -f
 
 # 直近のログを確認
-sudo journalctl -u plexus-gateway -n 50 --no-pager
+sudo journalctl -u muxport-gateway -n 50 --no-pager
 
 # 再起動
-sudo systemctl restart plexus-gateway
+sudo systemctl restart muxport-gateway
 
 # 停止
-sudo systemctl stop plexus-gateway
+sudo systemctl stop muxport-gateway
 ```
 
 ## 仕組み
@@ -51,15 +51,15 @@ sudo systemctl stop plexus-gateway
 
 ```text
 gateway/deploy/
-├── plexus-gateway.service.tmpl   # systemd テンプレート
-└── plexus                        # サービス管理CLI
+├── muxport-gateway.service.tmpl   # systemd テンプレート
+└── muxport                        # サービス管理CLI
 ```
 
 ### インストーラの動作
 
 1. 前提チェック（`gateway/main.py` の存在、`uv` の存在）
 2. テンプレートからサービスファイルを生成（`__WORKDIR__` / `__UV__` / `__USER__` を置換）
-3. `/etc/systemd/system/plexus-gateway.service` に配置
+3. `/etc/systemd/system/muxport-gateway.service` に配置
 4. `daemon-reload` → `enable` → `start`
 
 ### セキュリティ設定

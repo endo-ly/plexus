@@ -26,7 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.plexus.shared.core.ui.common.testTagResourceId
-import dev.plexus.shared.core.ui.theme.PlexusThemeTokens
+import dev.plexus.shared.core.ui.theme.MuxportThemeTokens
 
 private const val SPECIAL_KEY_COLUMNS = 6
 
@@ -62,8 +62,8 @@ fun SpecialKeysBar(
     isVoiceInputActive: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val dimens = PlexusThemeTokens.dimens
-    val shapes = PlexusThemeTokens.shapes
+    val dimens = MuxportThemeTokens.dimens
+    val shapes = MuxportThemeTokens.shapes
     val actions =
         listOf(
             TerminalPanelAction(
@@ -134,7 +134,7 @@ private fun SpecialPanelButton(
     onKeyPress: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val shapes = PlexusThemeTokens.shapes
+    val shapes = MuxportThemeTokens.shapes
     val containerColor =
         if (action.isAccent) {
             MaterialTheme.colorScheme.errorContainer

@@ -58,15 +58,15 @@ data class PlexusShapes(
 )
 
 @Immutable
-data class PlexusExtendedColors(
+data class MuxportExtendedColors(
     val success: Color = Teal400, // 接続成功、正常状態
 )
 
 internal val LocalPlexusDimens = staticCompositionLocalOf { PlexusDimens() }
 internal val LocalPlexusShapes = staticCompositionLocalOf { PlexusShapes() }
-internal val LocalPlexusExtendedColors = staticCompositionLocalOf { PlexusExtendedColors() }
+internal val LocalMuxportExtendedColors = staticCompositionLocalOf { MuxportExtendedColors() }
 
-object PlexusThemeTokens {
+object MuxportThemeTokens {
     val dimens: PlexusDimens
         @Composable
         @ReadOnlyComposable
@@ -77,8 +77,8 @@ object PlexusThemeTokens {
         @ReadOnlyComposable
         get() = LocalPlexusShapes.current
 
-    val extendedColors: PlexusExtendedColors
+    val extendedColors: MuxportExtendedColors
         @Composable
         @ReadOnlyComposable
-        get() = LocalPlexusExtendedColors.current
+        get() = LocalMuxportExtendedColors.current
 }
