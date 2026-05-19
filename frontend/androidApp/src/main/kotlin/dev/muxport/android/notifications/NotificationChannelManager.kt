@@ -5,7 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.content.getSystemService
-import dev.muxport.app.R
+import dev.plexus.app.R
 
 /**
  * Android 13+ (API 33+) で必須の通知チャンネル管理

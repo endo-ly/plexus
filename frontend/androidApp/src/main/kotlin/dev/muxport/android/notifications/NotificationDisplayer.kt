@@ -7,7 +7,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import dev.muxport.app.MainActivity
-import dev.muxport.app.R
+import dev.plexus.app.R
 
 /**
  * 通知表示ユーティリティ
