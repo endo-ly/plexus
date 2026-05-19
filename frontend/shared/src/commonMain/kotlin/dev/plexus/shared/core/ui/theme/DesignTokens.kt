@@ -68,8 +68,10 @@ data class MuxportExtendedColors(
 
 /** サイズ・間隔の CompositionLocal。 */
 internal val LocalPlexusDimens = staticCompositionLocalOf { PlexusDimens() }
+
 /** シェイプの CompositionLocal。 */
 internal val LocalPlexusShapes = staticCompositionLocalOf { PlexusShapes() }
+
 /** 拡張カラーの CompositionLocal。 */
 internal val LocalMuxportExtendedColors = staticCompositionLocalOf { MuxportExtendedColors() }
 
