@@ -6,6 +6,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dev.plexus.android.notifications.NotificationChannelManager
 import dev.plexus.android.notifications.NotificationDisplayer
+import dev.plexus.app.R
 
 /** Firebase Cloud Messaging サービス。
 
