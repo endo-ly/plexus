@@ -14,7 +14,7 @@ kotlin {
 }
 
 android {
-    namespace = "dev.plexus.app"
+    namespace = "dev.muxport.app"
     compileSdk = 36
 
     val keystorePath = "debug.keystore"
@@ -33,7 +33,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "dev.plexus.app"
+        applicationId = "dev.muxport.app"
         minSdk = 24
         targetSdk = 35
         versionCode = System.getenv("VERSION_CODE")?.toIntOrNull() ?: 1

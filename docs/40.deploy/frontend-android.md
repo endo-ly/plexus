@@ -53,7 +53,7 @@ keytool -genkey -v \
 - Android の debug ビルドでは `debug.keystore` が必要です
 - Android Studio / Gradle が自動生成した標準 debug keystore は通常 `/root/.android/debug.keystore` にあります
 - internal 配布用 workflow でも同じ debug keystore を使えます
-- 既存の EgoGraph 用 debug keystore を流用しても、`applicationId` が `dev.plexus.app` ならアプリ共存には影響しません
+- 既存の EgoGraph 用 debug keystore を流用しても、`applicationId` が `dev.muxport.app` ならアプリ共存には影響しません
 
 #### B. ビルド実行
 

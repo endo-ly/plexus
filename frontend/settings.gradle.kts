@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "plexus"
+rootProject.name = "muxport"
 
 include(":shared")
 include(":androidApp")
