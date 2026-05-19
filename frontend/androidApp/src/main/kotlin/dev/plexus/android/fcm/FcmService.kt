@@ -110,7 +110,7 @@ class FcmService : FirebaseMessagingService() {
                 // 通知を表示
                 NotificationDisplayer.showNotification(
                     context = this,
-                    title = notification.title ?: "Muxport",
+                    title = notification.title ?: getString(R.string.app_name),
                     message = notification.body ?: "New notification",
                 )
             }

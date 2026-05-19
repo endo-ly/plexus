@@ -128,6 +128,14 @@ private val DarkColorScheme =
         outlineVariant = Zinc700,
     )
 
+/** Muxport のテーマを適用する Composable。
+ *
+ * Material3 のカラースキームとカスタムトークン（サイズ・シェイプ・拡張カラー）を
+ * CompositionLocal 経由で子孫に提供する。
+ *
+ * @param darkTheme システムのダークテーマ判定や上書き用。
+ * @param content 描画される子コンテンツ。
+ */
 @Composable
 fun MuxportTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

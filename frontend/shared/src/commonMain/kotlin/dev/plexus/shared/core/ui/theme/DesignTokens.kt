@@ -57,15 +57,26 @@ data class PlexusShapes(
     val statusCircle: Shape = CircleShape,
 )
 
+/** 拡張カラーセット。アプリ固有のセマンティックカラーを提供する。
+ *
+ * @property success 接続成功・正常状態を表すカラー。
+ */
 @Immutable
 data class MuxportExtendedColors(
     val success: Color = Teal400, // 接続成功、正常状態
 )
 
+/** サイズ・間隔の CompositionLocal。 */
 internal val LocalPlexusDimens = staticCompositionLocalOf { PlexusDimens() }
+/** シェイプの CompositionLocal。 */
 internal val LocalPlexusShapes = staticCompositionLocalOf { PlexusShapes() }
+/** 拡張カラーの CompositionLocal。 */
 internal val LocalMuxportExtendedColors = staticCompositionLocalOf { MuxportExtendedColors() }
 
+/** テーマトークンの公開アクセスポイント。CompositionLocal から現在値を取得する。
+ *
+ * [dimens] サイズ・間隔。 [shapes] シェイプ。 [extendedColors] 拡張カラー。
+ */
 object MuxportThemeTokens {
     val dimens: PlexusDimens
         @Composable

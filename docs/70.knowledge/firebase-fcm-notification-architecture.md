@@ -44,8 +44,8 @@ Firebase は Google が提供する BaaS 群です。
 
 関連実装:
 
-- `frontend/androidApp/src/main/kotlin/dev/muxport/android/fcm/FcmService.kt`
-- `frontend/androidApp/src/main/kotlin/dev/muxport/android/fcm/FcmTokenManager.kt`
+- `frontend/androidApp/src/main/kotlin/dev/plexus/android/fcm/FcmService.kt`
+- `frontend/androidApp/src/main/kotlin/dev/plexus/android/fcm/FcmTokenManager.kt`
 - `gateway/api/push.py` (`register_token`)
 - `gateway/infrastructure/repositories.py` (`PushTokenRepository.save_token`)
 

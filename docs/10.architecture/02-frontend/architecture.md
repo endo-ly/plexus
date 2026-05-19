@@ -9,7 +9,7 @@ EgoGraph 由来の共通実装を土台にするが、Muxport ではチャット
 
 **対象範囲**
 
-- `frontend/shared/src/commonMain/kotlin/dev/muxport/shared/`
+- `frontend/shared/src/commonMain/kotlin/dev/plexus/shared/`
 - セッション一覧 / ターミナルセッション / ゲートウェイ設定 / システムプロンプトエディタ
 - Android 固有の描画補助や WebView bridge と連携する共有フロントエンド設計
 
@@ -54,7 +54,7 @@ UI 状態は `StateFlow`、単発イベントは `Channel` で扱う。
 ## パッケージ構成
 
 ```text
-frontend/shared/src/commonMain/kotlin/dev/muxport/shared/
+frontend/shared/src/commonMain/kotlin/dev/plexus/shared/
 ├── core/
 │   ├── data/
 │   │   └── repository/

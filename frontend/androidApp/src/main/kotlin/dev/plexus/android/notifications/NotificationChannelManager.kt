@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.content.getSystemService
+import dev.plexus.android.R
 
 /**
  * Android 13+ (API 33+) で必須の通知チャンネル管理
@@ -13,9 +14,7 @@ import androidx.core.content.getSystemService
  * Android 13 (API 33) 以降、POST_NOTIFICATIONSパーミッションも必要です。
  */
 object NotificationChannelManager {
-    private const val CHANNEL_ID = "plexus_terminal"
-    private const val CHANNEL_NAME = "Muxport Terminal"
-    private const val CHANNEL_DESCRIPTION = "Notifications for Muxport terminal events"
+    private const val CHANNEL_ID = "muxport_terminal"
 
     /**
      * 通知チャンネルを作成する
@@ -30,10 +29,10 @@ object NotificationChannelManager {
             val channel =
                 NotificationChannel(
                     CHANNEL_ID,
-                    CHANNEL_NAME,
+                    context.getString(R.string.notification_channel_name),
                     NotificationManager.IMPORTANCE_DEFAULT,
                 ).apply {
-                    description = CHANNEL_DESCRIPTION
+                    description = context.getString(R.string.notification_channel_description)
                     enableVibration(true)
                     setShowBadge(true)
                 }

@@ -88,7 +88,7 @@
 
 #### ファイルブラウザ API
 
-```
+```http
 GET /api/v1/files/sessions/{session_id}/browse?path=.&show_hidden=false
   200: { path: "/home/user/project/src", entries: [{name, type, size, modified}] }
   400: invalid_path
@@ -101,11 +101,11 @@ GET /api/v1/files/sessions/{session_id}/read?path=README.md
   403: path_outside_workdir
   404: session_not_found / file_not_found
   422: binary_file
-```
+```http
 
 #### Git API
 
-```
+```http
 GET /api/v1/git/sessions/{session_id}/status
   200: { branch: "main", staged: [{path, status}], unstaged: [{path, status}], untracked: [{path}] }
   404: session_not_found
@@ -127,7 +127,7 @@ GET /api/v1/git/sessions/{session_id}/commits/{sha}
   200: { commit: { sha, message, author, date }, diff: { files: [...] } }
   404: session_not_found / commit_not_found
   422: not_a_git_repo
-```
+```http
 
 ### 認証
 
@@ -142,9 +142,10 @@ GET /api/v1/git/sessions/{session_id}/commits/{sha}
   - コマンドは `anyio.to_thread.run_sync` で非同期ラップする
   - タイムアウト（例: 5秒）を設定し、ハング防止する
 - パス検証
-  - `os.path.realpath()` で正規化
-  - 正規化後のパスが許可ルート（`pane_current_path`）で始まることを検証
-  - 許可ルート自体は `git rev-parse --show-toplevel` でリポジトリルートを取るか、`pane_current_path` をそのまま使うかは実装時に決定する
+  - `os.path.realpath()` でシンボリックリンクを解決し、絶対パスに正規化する
+  - 許可ルートは `pane_current_path` とする（`os.path.realpath()` で同一正規化）
+  - 正規化後のパスと許可ルートを `os.path.commonpath` で比較し、commonpath が許可ルートと一致することを検証する（文字列プレフィックス一致は `/work/app` vs `/work/app2` の誤許可を生むため避ける）
+  - 末尾スラッシュやケース差異に依存しないよう、正規化後の `pathlib.PurePath` で統一的に扱う
 - ファイル種別判定
   - MIME タイプまたは拡張子ベースでテキスト/バイナリを判定する
   - 判定不能な場合は先頭バイトをチェックする（NUL バイト含有 → バイナリ）
@@ -224,9 +225,9 @@ GET /api/v1/git/sessions/{session_id}/commits/{sha}
 
 既存の操作ピルに2つのボタンを追加する。
 
-```
+```text
 [←] 🟢 agent-0001  [📂Files] [🔀Diff] [📋Paste] [📄Copy]
-```
+```text
 
 - **初期位置を画面上部に変更する**（既存は画面下部だが、ターミナル出力の邪魔になるため上に移動）
 - ドラッグによる位置変更は引き続き可能
@@ -237,7 +238,7 @@ GET /api/v1/git/sessions/{session_id}/commits/{sha}
 
 [📂Files] または [🔀Diff] をタップすると、ピル直下にコンパクトなポップオーバーが展開する。
 
-```
+```text
 ┌──────────────────────────────────────────┐
 │ StatusBar                                │
 │  [←] 🟢 agent-0001  [📂] [🔀] [📋] [📄] │  ← ピル（画面上部）
@@ -252,7 +253,7 @@ GET /api/v1/git/sessions/{session_id}/commits/{sha}
 │ $ git diff                               │
 │ ...streaming output...                   │  ← ターミナル（見えたまま）
 └──────────────────────────────────────────┘
-```
+```text
 
 - **ファイル一覧ポップオーバー**: ディレクトリ内のファイル・フォルダ一覧。ディレクトリをタップで階層移動。パンくずリストで現在地を表示
 - **Diff一覧ポップオーバー**: 変更ファイル一覧。各ファイルに変更種別アイコン（M/A/D/U）と +/- 行数を表示。ブランチ名をヘッダに表示
@@ -273,7 +274,7 @@ GET /api/v1/git/sessions/{session_id}/commits/{sha}
 
 ### 遷移図
 
-```
+```text
 TerminalScreen
   │
   ├─ [📂] → ポップオーバー（ファイル一覧）
@@ -286,11 +287,11 @@ TerminalScreen
   ├─ [📋] → paste（既存、そのまま）
   │
   └─ [📄] → CopyModeSheet（既存、ボトムシートのまま）
-```
+```text
 
 ### コンポーネント配置（frontend）
 
-```
+```text
 features/terminal/
   session/
     components/
@@ -309,7 +310,7 @@ features/terminal/
 core/platform/viewer/
   DocumentWebView.kt                            ← 新規（platform interface）
   viewer.html                                    ← 新規（asset）
-```
+```text
 
 ### 既存コードへの影響
 
@@ -346,7 +347,7 @@ core/platform/viewer/
 
 ### Phase 1
 
-- Gateway: File API（browse / read）+ Git API（status / diff / log / commit）
+- Gateway: File API（browse / read）+ Git API（status / diff / log）
 - パス検証・セキュリティ基盤
 - Frontend: ピルへのボタン追加 + 初期位置変更
 - Frontend: ファイル一覧ポップオーバー + Diff一覧ポップオーバー

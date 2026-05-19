@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Muxport</string>
+    <string name="notification_channel_name">Muxport Terminal</string>
+    <string name="notification_channel_description">Notifications for Muxport terminal events</string>
 </resources>

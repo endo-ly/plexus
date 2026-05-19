@@ -9,16 +9,17 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 /**
- * Muxport Application class
+ * Muxport アプリケーションクラス。
  *
- * Initializes Koin dependency injection container on app startup.
- * Must be declared in AndroidManifest.xml as the application class.
+ * アプリ起動時に Koin DI コンテナを初期化する。
+ * `AndroidManifest.xml` の `android:name` に指定する必要がある。
  */
 class MuxportApplication : Application() {
     /**
-     * Application entry point
+     * アプリケーションのエントリポイント。
      *
-     * Starts Koin with all application modules before any activity is launched.
+     * Activity が起動する前に Koin に全モジュールを登録し、
+     * 通知チャンネルの作成を行う。
      */
     override fun onCreate() {
         super.onCreate()
@@ -26,7 +27,7 @@ class MuxportApplication : Application() {
         // 通知チャンネルを作成（Android 8.0+）
         NotificationChannelManager.createNotificationChannel(this)
 
-        // Initialize Koin DI container
+        // Koin DI コンテナを初期化
         startKoin {
             androidContext(this@MuxportApplication)
             modules(appModule, androidModule, terminalModule)
