@@ -1,8 +1,8 @@
-# Plexus アーキテクチャ
+# Muxport アーキテクチャ
 
 ## 概要
 
-Plexus のアーキテクチャ設計をまとめた章。
+Muxport のアーキテクチャ設計をまとめた章。
 tmux を中心としたランタイムと、それに接続するフロントエンド / ゲートウェイの責務境界を整理する。
 
 ## ドキュメント構成
@@ -11,7 +11,7 @@ tmux を中心としたランタイムと、それに接続するフロントエ
 
 | ドキュメント | 内容 |
 | --- | --- |
-| [system-architecture](./01-overview/system-architecture.md) | Plexus 全体像、主要コンポーネント、実行時のつながり |
+| [system-architecture](./01-overview/system-architecture.md) | Muxport 全体像、主要コンポーネント、実行時のつながり |
 | [tech-stack](./01-overview/tech-stack.md) | コンポーネント別の技術スタックと役割 |
 
 ### 02-frontend

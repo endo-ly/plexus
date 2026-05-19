@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
-        android:name="dev.plexus.android.PlexusApplication"
+        android:name="dev.muxport.android.MuxportApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,7 +16,7 @@
         android:theme="@style/Theme.App.Starting">
 
         <activity
-            android:name="dev.plexus.app.MainActivity"
+            android:name="dev.muxport.app.MainActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:theme="@style/Theme.App">
@@ -36,7 +36,7 @@
 
         <!-- FCM Service -->
         <service
-            android:name="dev.plexus.android.fcm.FcmService"
+            android:name="dev.muxport.android.fcm.FcmService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

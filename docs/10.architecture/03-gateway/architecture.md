@@ -2,7 +2,7 @@
 
 ## 概要
 
-Plexus ゲートウェイは tmux を中心としたランタイムをフロントエンドや外部呼び出し元から扱うためのランタイム API 層。
+Muxport ゲートウェイは tmux を中心としたランタイムをフロントエンドや外部呼び出し元から扱うためのランタイム API 層。
 HTTP API、WebSocket ターミナル、プッシュ webhook を 1 つの Starlette アプリケーションとしてまとめ、tmux セッションへのアタッチとモバイルクライアント向け通信を提供する。
 
 ## 責務
@@ -19,7 +19,7 @@ HTTP API、WebSocket ターミナル、プッシュ webhook を 1 つの Starlet
 ```text
 ┌──────────────────────────────────────────────────────────────┐
 │ Clients                                                      │
-│ - Plexus frontend                                            │
+│ - Muxport frontend                                            │
 │ - webhook sender                                             │
 └──────────────────────────────┬───────────────────────────────┘
                                │ HTTP / WebSocket

@@ -1,6 +1,6 @@
 # Firebase / FCM 通知アーキテクチャ
 
-このドキュメントは、Plexus の通知機能における Firebase / FCM の役割と、実装上の責務分離を整理したものです。
+このドキュメントは、Muxport の通知機能における Firebase / FCM の役割と、実装上の責務分離を整理したものです。
 Webhook の手順詳細は `docs/70.knowledge/webhook-guide.md` を参照してください。
 
 ## Firebase とは
@@ -44,8 +44,8 @@ Firebase は Google が提供する BaaS 群です。
 
 関連実装:
 
-- `frontend/androidApp/src/main/kotlin/dev/plexus/android/fcm/FcmService.kt`
-- `frontend/androidApp/src/main/kotlin/dev/plexus/android/fcm/FcmTokenManager.kt`
+- `frontend/androidApp/src/main/kotlin/dev/muxport/android/fcm/FcmService.kt`
+- `frontend/androidApp/src/main/kotlin/dev/muxport/android/fcm/FcmTokenManager.kt`
 - `gateway/api/push.py` (`register_token`)
 - `gateway/infrastructure/repositories.py` (`PushTokenRepository.save_token`)
 

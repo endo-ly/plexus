@@ -1,15 +1,15 @@
-# Plexus 開発ガイドライン
+# Muxport 開発ガイドライン
 
 ## 概要
 
-Plexus は、tmux を中心に AI エージェントや Worker を動かすための runtime repository です。
+Muxport は、tmux + WebSocket + モバイルの便利インフラです。
 
 構成:
 
 - `gateway/`: Python / Starlette ベースの runtime API
 - `frontend/`: Kotlin Multiplatform / Compose Multiplatform ベースの Android terminal client
 - `maestro/`: terminal UI の E2E フロー
-- `docs/`: terminal / orchestration / FCM / webhook などの設計と運用知識
+- `docs/`: terminal / FCM / webhook / deploy などの設計と運用知識
 
 ## アーキテクチャ
 
@@ -19,7 +19,6 @@ Layered Architecture - Starlette ベースの軽量 API
 
 - Terminal Surface: tmux session list / snapshot / websocket terminal / push
 - Runtime Control: 認証、永続化、push token 管理
-- 将来拡張: orchestration surface（task / attempt / worker / lease / heartbeat）
 - Tech Stack: Python 3.12+, Starlette, Uvicorn, SQLite, WebSocket, libtmux
 
 ### frontend
@@ -41,11 +40,10 @@ MVVM (StateFlow + Channel) - Kotlin Multiplatform + Compose Multiplatform
 
 ### runtime model
 
-Plexus は次の3つを runtime の中核として扱います。
+Muxport は tmux を runtime の中核として扱います。
 
 - `tmux`: 実行 session の中心
-- `git worktree`: 並列作業の物理分離
-- durable state: 実行状態の追跡と将来の orchestration control plane
+- モバイルからの安全なアクセス（Tailscale + Bearer token）
 
 ## 開発コマンド
 
@@ -88,8 +86,8 @@ maestro test maestro/flows/
 
 - 長期的な保守性、コードの美しさ、堅牢性を優先する
 - KISS / YAGNI / DRY を守る
-- terminal surface と orchestration surface の責務を混ぜない
-- tmux / worktree / runtime state の役割を曖昧にしない
+- terminal surface と周辺機能（ファイルブラウザ等）の責務を混ぜない
+- tmux / WebSocket / モバイルの役割を曖昧にしない
 - 場当たり的なフォールバックで複雑さを増やさない
 
 ### 実装ルール
@@ -106,7 +104,7 @@ maestro test maestro/flows/
 
 - GitHub Flow を基本とする
 - コミットは Conventional Commits（英語）
-- ワークフローは Plexus の責務に関係するものだけ残す
+- ワークフローは Muxport の責務に関係するものだけ残す
 
 ## デバッグ
 

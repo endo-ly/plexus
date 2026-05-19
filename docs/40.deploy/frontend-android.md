@@ -1,6 +1,6 @@
 # Frontend Deploy (Android)
 
-Plexus の Android アプリをビルドし、内部配布用 debug APK を作成する手順。
+Muxport の Android アプリをビルドし、内部配布用 debug APK を作成する手順。
 Kotlin Multiplatform + Compose Multiplatform を使用し、Android ネイティブアプリとして実機確認に使う。
 
 ## 1. 前提条件
@@ -44,7 +44,7 @@ cd frontend
 ```bash
 keytool -genkey -v \
   -keystore debug.keystore \
-  -alias plexus \
+  -alias muxport \
   -keyalg RSA -keysize 2048 -validity 10000
 ```
 
@@ -53,7 +53,7 @@ keytool -genkey -v \
 - Android の debug ビルドでは `debug.keystore` が必要です
 - Android Studio / Gradle が自動生成した標準 debug keystore は通常 `/root/.android/debug.keystore` にあります
 - internal 配布用 workflow でも同じ debug keystore を使えます
-- 既存の EgoGraph 用 debug keystore を流用しても、`applicationId` が `dev.plexus.app` ならアプリ共存には影響しません
+- 既存の EgoGraph 用 debug keystore を流用しても、`applicationId` が `dev.muxport.app` ならアプリ共存には影響しません
 
 #### B. ビルド実行
 

@@ -2,14 +2,14 @@
 
 ## 概要
 
-Plexus フロントエンドは Android 向けターミナルクライアント。
+Muxport フロントエンドは Android 向けターミナルクライアント。
 tmux を中心としたランタイムにモバイルから接続するための UI 層。
 
-EgoGraph 由来の共通実装を土台にするが、Plexus ではチャット中心アプリではなくターミナル中心アプリとして責務を整理している。
+EgoGraph 由来の共通実装を土台にするが、Muxport ではチャット中心アプリではなくターミナル中心アプリとして責務を整理している。
 
 **対象範囲**
 
-- `frontend/shared/src/commonMain/kotlin/dev/plexus/shared/`
+- `frontend/shared/src/commonMain/kotlin/dev/muxport/shared/`
 - セッション一覧 / ターミナルセッション / ゲートウェイ設定 / システムプロンプトエディタ
 - Android 固有の描画補助や WebView bridge と連携する共有フロントエンド設計
 
@@ -54,7 +54,7 @@ UI 状態は `StateFlow`、単発イベントは `Channel` で扱う。
 ## パッケージ構成
 
 ```text
-frontend/shared/src/commonMain/kotlin/dev/plexus/shared/
+frontend/shared/src/commonMain/kotlin/dev/muxport/shared/
 ├── core/
 │   ├── data/
 │   │   └── repository/
@@ -164,7 +164,7 @@ DI には Koin を用いる。
 
 ## 設計意図
 
-Plexus フロントエンドはターミナルアプリとして成立する最小境界を保つ。
+Muxport フロントエンドはターミナルアプリとして成立する最小境界を保つ。
 EgoGraph 由来の実装要素が残っていても、責務は次のように読み替える。
 
 - ターミナルアクセスに直接関係しない機能は中心に置かない

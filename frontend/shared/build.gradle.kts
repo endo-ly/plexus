@@ -116,7 +116,7 @@ kotlin {
 }
 
 android {
-    namespace = "dev.plexus.shared"
+    namespace = "dev.muxport.shared"
     compileSdk = 36
 
     defaultConfig {
@@ -134,7 +134,7 @@ android {
         buildConfigField(
             "String",
             "RELEASE_BASE_URL",
-            "\"${project.findProperty("PLEXUS_BASE_URL_RELEASE") ?: "https://api.plexus.dev"}\"",
+            "\"${project.findProperty("MUXPORT_BASE_URL_RELEASE") ?: "https://api.muxport.dev"}\"",
         )
         buildConfigField(
             "String",
@@ -149,7 +149,7 @@ android {
         buildConfigField(
             "String",
             "RELEASE_GATEWAY_BASE_URL",
-            "\"${project.findProperty("PLEXUS_GATEWAY_BASE_URL_RELEASE") ?: "https://gateway.plexus.dev"}\"",
+            "\"${project.findProperty("MUXPORT_GATEWAY_BASE_URL_RELEASE") ?: "https://gateway.muxport.dev"}\"",
         )
     }
 

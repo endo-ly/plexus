@@ -1,12 +1,12 @@
 # Gateway systemd 自動起動
 
-Plexus Gateway を systemd サービスとして登録し、OS 起動時に自動的に立ち上げる方法。
+Muxport Gateway を systemd サービスとして登録し、OS 起動時に自動的に立ち上げる方法。
 
 ## 前提
 
 - Linux（systemd 採用ディストリビューション）
 - [uv](https://docs.astral.sh/uv/) がインストール済み
-- Plexus リポジトリがクローン済み
+- Muxport リポジトリがクローン済み
 
 ## クイックスタート
 

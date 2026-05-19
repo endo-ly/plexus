@@ -298,7 +298,7 @@ cd /root/workspace/plexus/frontend
 
 ```bash
 # アプリ起動
-adb shell am start -n dev.plexus.androidapp/.MainActivity
+adb shell am start -n dev.muxport.androidapp/.MainActivity
 
 # ログ監視
 adb logcat -s Plexus
