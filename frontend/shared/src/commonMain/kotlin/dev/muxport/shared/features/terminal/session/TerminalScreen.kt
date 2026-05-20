@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
+import dev.muxport.shared.core.domain.model.file.FileBrowseEntry
 import dev.muxport.shared.core.domain.repository.TerminalRepository
 import dev.muxport.shared.core.platform.PlatformPreferences
 import dev.muxport.shared.core.platform.PlatformPrefsKeys
@@ -36,6 +37,8 @@ import dev.muxport.shared.core.platform.rememberKeyboardState
 import dev.muxport.shared.core.settings.AppTheme
 import dev.muxport.shared.core.settings.ThemeRepository
 import dev.muxport.shared.features.terminal.session.components.DraggableTerminalFloatingControlPill
+import dev.muxport.shared.features.terminal.session.components.FileBrowserPopover
+import dev.muxport.shared.features.terminal.session.components.GitDiffPopover
 import dev.muxport.shared.features.terminal.session.components.SpecialKeysBar
 import dev.muxport.shared.features.terminal.session.components.TerminalFloatingControlPosition
 import dev.muxport.shared.features.terminal.session.components.TerminalView
@@ -97,6 +100,11 @@ private fun TerminalContent(
     var isCopyModeOpen by remember { mutableStateOf(false) }
     var keyboardAccessoryHeightPx by remember { mutableIntStateOf(0) }
     var floatingControlPosition by remember(agentId) { mutableStateOf<TerminalFloatingControlPosition?>(null) }
+    var showFileBrowser by remember { mutableStateOf(false) }
+    var showGitDiff by remember { mutableStateOf(false) }
+    var currentBrowsePath by remember { mutableStateOf(".") }
+    val fileBrowserEntries by remember { mutableStateOf(emptyList<FileBrowseEntry>()) }
+    var isGitRepo by remember { mutableStateOf(false) }
     val backoff = remember { createTerminalReconnectBackoff() }
     val coroutineScope = rememberCoroutineScope()
 
@@ -282,10 +290,41 @@ private fun TerminalContent(
             onBack = { onClose?.invoke() ?: navigator.pop() },
             onPaste = { webView.pasteFromClipboard() },
             onCopy = { isCopyModeOpen = true },
+            onFiles = { showFileBrowser = true },
+            onDiff = { showGitDiff = true },
+            isGitRepo = isGitRepo,
+            onDragStart = {
+                showFileBrowser = false
+                showGitDiff = false
+            },
             position = floatingControlPosition,
             onPositionChange = { position -> floatingControlPosition = position },
             bottomObstacleHeightPx = floatingControlBottomObstacleHeightPx,
         )
+
+        if (showFileBrowser) {
+            FileBrowserPopover(
+                entries = fileBrowserEntries,
+                currentPath = currentBrowsePath,
+                onDirectoryClick = { path -> currentBrowsePath = path },
+                onFileClick = { },
+                onBreadcrumbClick = { path -> currentBrowsePath = path },
+                onDismiss = { showFileBrowser = false },
+                showHidden = false,
+                onShowHiddenChange = {},
+                isLoading = false,
+            )
+        }
+
+        if (showGitDiff) {
+            GitDiffPopover(
+                status = null,
+                diffFiles = emptyList(),
+                onFileClick = {},
+                onDismiss = { showGitDiff = false },
+                isLoading = false,
+            )
+        }
     }
 
     if (isCopyModeOpen) {
