@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --line-num: #6e7781;
+    --diff-add-bg: #e6ffec;
+    --diff-add-fg: #22863a;
+    --diff-del-bg: #ffebe9;
+    --diff-del-fg: #cb2431;
+  }
+
+  .dark {
+    --bg: #1e1e1e;
+    --fg: #e0e0e0;
+    --line-num: #8b949e;
+    --diff-add-bg: #1a3a2a;
+    --diff-add-fg: #3fb950;
+    --diff-del-bg: #3a1a1a;
+    --diff-del-fg: #f85149;
+  }
+
+  body {
+    margin: 0;
+    padding: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--bg);
+    color: var(--fg);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'SF Mono', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .diff-add {
+    background-color: var(--diff-add-bg);
+    color: var(--diff-add-fg);
+  }
+
+  .diff-del {
+    background-color: var(--diff-del-bg);
+    color: var(--diff-del-fg);
+  }
+
+  .line-num {
+    color: var(--line-num);
+    user-select: none;
+    display: inline-block;
+    width: 40px;
+    text-align: right;
+    margin-right: 12px;
+  }
+
+  #content {
+    display: none;
+  }
+
+  #content.active {
+    display: block;
+  }
+</style>
+</head>
+<body>
+<div id="content"></div>
+<script>
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function renderMarkdown(text) {
+    document.getElementById('content').innerHTML =
+        '<div style="line-height:1.6">' + escapeHtml(text).replace(/\n/g, '<br>') + '</div>';
+}
+
+function renderDiff(text) {
+    var lines = text.split('\n');
+    var html = '<pre>';
+    for (var i = 0; i < lines.length; i++) {
+        var escaped = escapeHtml(lines[i]);
+        if (lines[i].startsWith('+') && !lines[i].startsWith('+++')) {
+            html += '<div class="diff-add">' + escaped + '</div>';
+        } else if (lines[i].startsWith('-') && !lines[i].startsWith('---')) {
+            html += '<div class="diff-del">' + escaped + '</div>';
+        } else {
+            html += escaped + '\n';
+        }
+    }
+    html += '</pre>';
+    document.getElementById('content').innerHTML = html;
+}
+
+function renderCode(text) {
+    var lines = text.split('\n');
+    var html = '<pre>';
+    for (var i = 0; i < lines.length; i++) {
+        html += '<span class="line-num">' + (i + 1) + '</span>' + escapeHtml(lines[i]) + '\n';
+    }
+    html += '</pre>';
+    document.getElementById('content').innerHTML = html;
+}
+
+function renderPlainText(text) {
+    document.getElementById('content').innerHTML = '<pre>' + escapeHtml(text) + '</pre>';
+}
+
+function render(type, content) {
+    document.getElementById('content').className = 'active';
+    switch (type) {
+        case 'markdown': renderMarkdown(content); break;
+        case 'diff': renderDiff(content); break;
+        case 'code': renderCode(content); break;
+        default: renderPlainText(content); break;
+    }
+}
+
+function setTheme(dark) {
+    document.body.className = dark ? 'dark' : '';
+}
+</script>
+</body>
+</html>
