@@ -17,6 +17,8 @@ from starlette.responses import JSONResponse, PlainTextResponse
 from starlette.routing import Mount, Route
 from starlette.types import ASGIApp
 
+from gateway.api.files import get_file_routes
+from gateway.api.git import get_git_routes
 from gateway.api.push import routes as push_routes
 from gateway.api.terminal import get_terminal_routes
 from gateway.config import (
@@ -102,6 +104,10 @@ def create_app() -> Starlette:
         *push_routes,
         # Terminal API
         Mount("/api", routes=get_terminal_routes()),
+        # File Browser API
+        Mount("/api", routes=get_file_routes()),
+        # Git API
+        Mount("/api", routes=get_git_routes()),
     ]
 
     app = Starlette(
