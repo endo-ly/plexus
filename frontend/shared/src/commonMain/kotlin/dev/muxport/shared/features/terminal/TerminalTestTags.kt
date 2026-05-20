@@ -25,4 +25,10 @@ object TerminalTestTags {
 
     /** クリップボード内容を貼り付けるボタンのタグ */
     const val TERMINAL_PASTE_BUTTON = "terminal_paste_button"
+
+    /** ファイルブラウザを開くボタンのタグ */
+    const val TERMINAL_FILES_BUTTON = "terminal_files_button"
+
+    /** Git diff一覧を開くボタンのタグ */
+    const val TERMINAL_DIFF_BUTTON = "terminal_diff_button"
 }

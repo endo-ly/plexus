@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 
 class DraggableTerminalFloatingControlPillTest {
     @Test
-    fun `default position stays centered horizontally and above bottom margin`() {
+    fun `default position stays centered horizontally and near top margin`() {
         // Arrange
         val bounds =
             TerminalFloatingControlBounds(
@@ -22,7 +22,7 @@ class DraggableTerminalFloatingControlPillTest {
 
         // Assert
         assertEquals(110f, position.xPx)
-        assertEquals(736f, position.yPx)
+        assertEquals(16f, position.yPx)
     }
 
     @Test
@@ -45,7 +45,7 @@ class DraggableTerminalFloatingControlPillTest {
 
         // Assert
         assertEquals(110f, position.xPx)
-        assertEquals(702f, position.yPx)
+        assertEquals(40f, position.yPx)
     }
 
     @Test
