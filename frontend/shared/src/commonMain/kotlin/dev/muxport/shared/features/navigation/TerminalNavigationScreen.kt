@@ -14,17 +14,21 @@ import dev.muxport.shared.core.platform.PlatformPrefsKeys
 import dev.muxport.shared.features.terminal.agentlist.AgentListScreen
 import dev.muxport.shared.features.terminal.session.TerminalScreen
 import dev.muxport.shared.features.terminal.settings.GatewaySettingsScreen
+import dev.muxport.shared.features.terminal.viewer.DocumentViewerScreen
 import org.koin.compose.koinInject
 
 /**
  * ターミナルナビゲーション画面
  *
- * セッション一覧、ターミナルセッション、Gateway設定の3画面を切り替えるルート画面。
+ * セッション一覧、ターミナルセッション、Gateway設定、ドキュメントビューアの4画面を切り替えるルート画面。
  */
 class TerminalNavigationScreen : Screen {
     @Composable
     override fun Content() {
         var activeView by rememberSaveable { mutableStateOf(MainView.Terminal) }
+        var documentFileName by rememberSaveable { mutableStateOf("") }
+        var documentContentType by rememberSaveable { mutableStateOf("") }
+        var documentContent by rememberSaveable { mutableStateOf("") }
 
         BackHandler(enabled = activeView != MainView.Terminal) {
             activeView = MainView.Terminal
@@ -83,12 +87,29 @@ class TerminalNavigationScreen : Screen {
                                 TerminalScreen(
                                     agentId = lastSessionId,
                                     onClose = { activeView = MainView.Terminal },
+                                    onNavigateToDocumentViewer = { fileName, contentType, content ->
+                                        documentFileName = fileName
+                                        documentContentType = contentType
+                                        documentContent = content
+                                        activeView = MainView.DocumentViewer
+                                    },
                                 )
                             }
                         terminalScreen.Content()
                     } else {
                         activeView = MainView.Terminal
                     }
+                }
+                MainView.DocumentViewer -> {
+                    val documentViewerScreen =
+                        remember(documentFileName) {
+                            DocumentViewerScreen(
+                                fileName = documentFileName,
+                                contentType = documentContentType,
+                                content = documentContent,
+                            )
+                        }
+                    documentViewerScreen.Content()
                 }
             }
         }

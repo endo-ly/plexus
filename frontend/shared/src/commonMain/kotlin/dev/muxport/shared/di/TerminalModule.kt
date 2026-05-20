@@ -1,7 +1,11 @@
 package dev.muxport.shared.di
 
+import dev.muxport.shared.core.data.repository.FileRepositoryImpl
+import dev.muxport.shared.core.data.repository.GitRepositoryImpl
 import dev.muxport.shared.core.data.repository.TerminalRepositoryImpl
 import dev.muxport.shared.core.data.repository.internal.RepositoryClient
+import dev.muxport.shared.core.domain.repository.FileRepository
+import dev.muxport.shared.core.domain.repository.GitRepository
 import dev.muxport.shared.core.domain.repository.TerminalRepository
 import dev.muxport.shared.core.platform.PlatformPreferences
 import dev.muxport.shared.core.platform.PlatformPrefsDefaults
@@ -42,6 +46,18 @@ val terminalModule =
         // === Repository ===
         single<TerminalRepository> {
             TerminalRepositoryImpl(
+                repositoryClient = get(qualifier = named("GatewayClient")),
+            )
+        }
+
+        single<FileRepository> {
+            FileRepositoryImpl(
+                repositoryClient = get(qualifier = named("GatewayClient")),
+            )
+        }
+
+        single<GitRepository> {
+            GitRepositoryImpl(
                 repositoryClient = get(qualifier = named("GatewayClient")),
             )
         }

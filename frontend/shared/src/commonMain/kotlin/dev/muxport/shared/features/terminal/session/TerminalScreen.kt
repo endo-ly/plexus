@@ -30,6 +30,10 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import dev.muxport.shared.core.domain.model.file.FileBrowseEntry
+import dev.muxport.shared.core.domain.model.git.GitDiffFile
+import dev.muxport.shared.core.domain.model.git.GitStatusResponse
+import dev.muxport.shared.core.domain.repository.FileRepository
+import dev.muxport.shared.core.domain.repository.GitRepository
 import dev.muxport.shared.core.domain.repository.TerminalRepository
 import dev.muxport.shared.core.platform.PlatformPreferences
 import dev.muxport.shared.core.platform.PlatformPrefsKeys
@@ -61,17 +65,23 @@ private val TERMINAL_KEYBOARD_FOCUS_BUFFER = 16.dp
  *
  * @property agentId エージェントID
  * @property onClose 閉じるボタンが押された時のコールバック
+ * @property onNavigateToDocumentViewer ファイルタップ時にドキュメントビューアへ遷移するコールバック
  */
 class TerminalScreen(
     private val agentId: String,
     private val onClose: (() -> Unit)? = null,
+    private val onNavigateToDocumentViewer: ((fileName: String, contentType: String, content: String) -> Unit)? = null,
 ) : Screen {
     override val key: ScreenKey
         get() = "TerminalScreen:$agentId"
 
     @Composable
     override fun Content() {
-        TerminalContent(agentId = agentId, onClose = onClose)
+        TerminalContent(
+            agentId = agentId,
+            onClose = onClose,
+            onNavigateToDocumentViewer = onNavigateToDocumentViewer,
+        )
     }
 }
 
@@ -79,12 +89,15 @@ class TerminalScreen(
 private fun TerminalContent(
     agentId: String,
     onClose: (() -> Unit)? = null,
+    onNavigateToDocumentViewer: ((fileName: String, contentType: String, content: String) -> Unit)? = null,
 ) {
     val navigator = requireNotNull(LocalNavigator.current)
     val webView = rememberTerminalWebView()
     val preferences = koinInject<PlatformPreferences>()
     val themeRepository = koinInject<ThemeRepository>()
     val terminalRepository = koinInject<TerminalRepository>()
+    val fileRepository = koinInject<FileRepository>()
+    val gitRepository = koinInject<GitRepository>()
     val selectedTheme by themeRepository.theme.collectAsState()
     val connectionState by webView.connectionState.collectAsState(initial = false)
     val keyboardState = rememberKeyboardState()
@@ -103,8 +116,12 @@ private fun TerminalContent(
     var showFileBrowser by remember { mutableStateOf(false) }
     var showGitDiff by remember { mutableStateOf(false) }
     var currentBrowsePath by remember { mutableStateOf(".") }
-    val fileBrowserEntries by remember { mutableStateOf(emptyList<FileBrowseEntry>()) }
+    var fileBrowserEntries by remember { mutableStateOf(emptyList<FileBrowseEntry>()) }
     var isGitRepo by remember { mutableStateOf(false) }
+    var gitStatus by remember { mutableStateOf<GitStatusResponse?>(null) }
+    var gitDiffFiles by remember { mutableStateOf(emptyList<GitDiffFile>()) }
+    var isLoadingFiles by remember { mutableStateOf(false) }
+    var isLoadingGit by remember { mutableStateOf(false) }
     val backoff = remember { createTerminalReconnectBackoff() }
     val coroutineScope = rememberCoroutineScope()
 
@@ -120,6 +137,38 @@ private fun TerminalContent(
 
     LaunchedEffect(agentId) {
         preferences.putString(PlatformPrefsKeys.KEY_LAST_TERMINAL_SESSION, agentId)
+    }
+
+    LaunchedEffect(showFileBrowser, currentBrowsePath) {
+        if (showFileBrowser) {
+            isLoadingFiles = true
+            val result = fileRepository.browseFiles(agentId, path = currentBrowsePath)
+            result
+                .onSuccess { response ->
+                    fileBrowserEntries = response.entries
+                }
+            isLoadingFiles = false
+        }
+    }
+
+    LaunchedEffect(showGitDiff) {
+        if (showGitDiff) {
+            isLoadingGit = true
+            val statusResult = gitRepository.getStatus(agentId)
+            statusResult
+                .onSuccess { status ->
+                    gitStatus = status
+                    isGitRepo = true
+                }.onFailure {
+                    isGitRepo = false
+                }
+            val diffResult = gitRepository.getDiff(agentId)
+            diffResult
+                .onSuccess { diff ->
+                    gitDiffFiles = diff.files
+                }
+            isLoadingGit = false
+        }
     }
 
     LaunchedEffect(terminalSettings.error) {
@@ -307,22 +356,53 @@ private fun TerminalContent(
                 entries = fileBrowserEntries,
                 currentPath = currentBrowsePath,
                 onDirectoryClick = { path -> currentBrowsePath = path },
-                onFileClick = { },
+                onFileClick = { path ->
+                    showFileBrowser = false
+                    coroutineScope.launch {
+                        val result = fileRepository.readFile(agentId, path = path)
+                        result
+                            .onSuccess { fileResult ->
+                                onNavigateToDocumentViewer?.invoke(
+                                    path.substringAfterLast("/"),
+                                    fileResult.language,
+                                    fileResult.content,
+                                )
+                            }
+                    }
+                },
                 onBreadcrumbClick = { path -> currentBrowsePath = path },
                 onDismiss = { showFileBrowser = false },
                 showHidden = false,
                 onShowHiddenChange = {},
-                isLoading = false,
+                isLoading = isLoadingFiles,
             )
         }
 
         if (showGitDiff) {
             GitDiffPopover(
-                status = null,
-                diffFiles = emptyList(),
-                onFileClick = {},
+                status = gitStatus,
+                diffFiles = gitDiffFiles,
+                onFileClick = { path ->
+                    showGitDiff = false
+                    coroutineScope.launch {
+                        val readResult = fileRepository.readFile(agentId, path = path)
+                        readResult
+                            .onSuccess { fileResult ->
+                                val diffResult = gitRepository.getDiff(agentId, path = path)
+                                diffResult
+                                    .onSuccess { diff ->
+                                        val patch = diff.files.firstOrNull()?.patch ?: ""
+                                        onNavigateToDocumentViewer?.invoke(
+                                            path.substringAfterLast("/"),
+                                            "diff",
+                                            patch,
+                                        )
+                                    }
+                            }
+                    }
+                },
                 onDismiss = { showGitDiff = false },
-                isLoading = false,
+                isLoading = isLoadingGit,
             )
         }
     }
