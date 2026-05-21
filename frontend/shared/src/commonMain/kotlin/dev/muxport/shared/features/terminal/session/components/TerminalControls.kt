@@ -119,7 +119,7 @@ fun TerminalFloatingControlPill(
             Spacer(modifier = Modifier.width(dimens.space8))
             TerminalFilesButton(onClick = onFiles)
             Spacer(modifier = Modifier.width(dimens.space4))
-            TerminalDiffButton(onClick = onDiff, enabled = isGitRepo)
+            TerminalDiffButton(onClick = onDiff)
             Spacer(modifier = Modifier.width(dimens.space4))
             TerminalPasteButton(onClick = onPaste)
             Spacer(modifier = Modifier.width(dimens.space4))

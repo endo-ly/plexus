@@ -31,6 +31,7 @@ import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import dev.muxport.shared.core.domain.model.file.FileBrowseEntry
 import dev.muxport.shared.core.domain.model.git.GitDiffFile
+import dev.muxport.shared.core.domain.model.git.GitFileChange
 import dev.muxport.shared.core.domain.model.git.GitStatusResponse
 import dev.muxport.shared.core.domain.repository.FileRepository
 import dev.muxport.shared.core.domain.repository.GitRepository
@@ -75,7 +76,13 @@ class TerminalScreen(
     override val key: ScreenKey
         get() = "TerminalScreen:$agentId"
 
-    var pendingRestorePopover: String? = null
+    private var pendingRestorePopover: String? = null
+    private var restorePopoverRequestId: Int = 0
+
+    fun requestPopoverRestore(source: String) {
+        pendingRestorePopover = source
+        restorePopoverRequestId++
+    }
 
     @Composable
     override fun Content() {
@@ -84,6 +91,7 @@ class TerminalScreen(
             onClose = onClose,
             onNavigateToDocumentViewer = onNavigateToDocumentViewer,
             restorePopover = pendingRestorePopover.also { pendingRestorePopover = null },
+            restorePopoverRequestId = restorePopoverRequestId,
         )
     }
 }
@@ -94,6 +102,7 @@ private fun TerminalContent(
     onClose: (() -> Unit)? = null,
     onNavigateToDocumentViewer: ((fileName: String, contentType: String, content: String, source: String) -> Unit)? = null,
     restorePopover: String? = null,
+    restorePopoverRequestId: Int = 0,
 ) {
     val navigator = requireNotNull(LocalNavigator.current)
     val webView = rememberTerminalWebView()
@@ -117,8 +126,22 @@ private fun TerminalContent(
     var isCopyModeOpen by remember { mutableStateOf(false) }
     var keyboardAccessoryHeightPx by remember { mutableIntStateOf(0) }
     var floatingControlPosition by remember(agentId) { mutableStateOf<TerminalFloatingControlPosition?>(null) }
-    var showFileBrowser by remember { mutableStateOf(restorePopover == "files") }
-    var showGitDiff by remember { mutableStateOf(restorePopover == "diff") }
+    var showFileBrowser by remember { mutableStateOf(false) }
+    var showGitDiff by remember { mutableStateOf(false) }
+    var gitDiffRefreshRequest by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(restorePopoverRequestId) {
+        when (restorePopover) {
+            "files" -> {
+                showGitDiff = false
+                showFileBrowser = true
+            }
+            "diff" -> {
+                showFileBrowser = false
+                showGitDiff = true
+            }
+        }
+    }
     var showHiddenFiles by remember { mutableStateOf(false) }
     var currentBrowsePath by remember { mutableStateOf(".") }
     var fileBrowserEntries by remember { mutableStateOf(emptyList<FileBrowseEntry>()) }
@@ -152,10 +175,15 @@ private fun TerminalContent(
             }
     }
 
-    LaunchedEffect(showFileBrowser, currentBrowsePath) {
+    LaunchedEffect(showFileBrowser, currentBrowsePath, showHiddenFiles) {
         if (showFileBrowser) {
             isLoadingFiles = true
-            val result = fileRepository.browseFiles(agentId, path = currentBrowsePath)
+            val result =
+                fileRepository.browseFiles(
+                    sessionId = agentId,
+                    path = currentBrowsePath,
+                    showHidden = showHiddenFiles,
+                )
             result
                 .onSuccess { response ->
                     fileBrowserEntries = response.entries
@@ -164,9 +192,10 @@ private fun TerminalContent(
         }
     }
 
-    LaunchedEffect(showGitDiff) {
+    LaunchedEffect(showGitDiff, gitDiffRefreshRequest) {
         if (showGitDiff) {
             isLoadingGit = true
+            gitDiffFiles = emptyList()
             val statusResult = gitRepository.getStatus(agentId)
             statusResult
                 .onSuccess { status ->
@@ -175,11 +204,12 @@ private fun TerminalContent(
                 }.onFailure {
                     isGitRepo = false
                 }
-            val diffResult = gitRepository.getDiff(agentId)
-            diffResult
-                .onSuccess { diff ->
-                    gitDiffFiles = diff.files
-                }
+            val unstagedDiffResult = gitRepository.getDiff(agentId, target = "unstaged")
+            val stagedDiffResult = gitRepository.getDiff(agentId, target = "staged")
+            val unstagedFiles = unstagedDiffResult.getOrNull()?.files.orEmpty()
+            val stagedFiles = stagedDiffResult.getOrNull()?.files.orEmpty()
+            val statusFiles = gitStatus?.toDiffFallbackFiles().orEmpty()
+            gitDiffFiles = mergeGitDiffFiles(unstagedFiles + stagedFiles + statusFiles)
             isLoadingGit = false
         }
     }
@@ -352,8 +382,15 @@ private fun TerminalContent(
             onBack = { onClose?.invoke() ?: navigator.pop() },
             onPaste = { webView.pasteFromClipboard() },
             onCopy = { isCopyModeOpen = true },
-            onFiles = { showFileBrowser = true },
-            onDiff = { showGitDiff = true },
+            onFiles = {
+                showGitDiff = false
+                showFileBrowser = true
+            },
+            onDiff = {
+                showFileBrowser = false
+                showGitDiff = true
+                gitDiffRefreshRequest++
+            },
             isGitRepo = isGitRepo,
             onDragStart = {
                 showFileBrowser = false
@@ -399,9 +436,13 @@ private fun TerminalContent(
                 onFileClick = { path ->
                     showGitDiff = false
                     coroutineScope.launch {
-                        val diffResult = gitRepository.getDiff(agentId, path = path)
-                        diffResult.onSuccess { diff ->
-                            val patch = diff.files.firstOrNull()?.patch ?: ""
+                        val unstagedDiffResult = gitRepository.getDiff(agentId, target = "unstaged", path = path)
+                        val stagedDiffResult = gitRepository.getDiff(agentId, target = "staged", path = path)
+                        val patch =
+                            unstagedDiffResult.getOrNull()?.files?.firstOrNull()?.patch
+                                ?: stagedDiffResult.getOrNull()?.files?.firstOrNull()?.patch
+                                ?: "No diff is available for $path."
+                        if (unstagedDiffResult.isSuccess || stagedDiffResult.isSuccess) {
                             onNavigateToDocumentViewer?.invoke(
                                 path.substringAfterLast("/"),
                                 "diff",
@@ -424,3 +465,28 @@ private fun TerminalContent(
         )
     }
 }
+
+private fun GitStatusResponse.toDiffFallbackFiles(): List<GitDiffFile> =
+    (unstaged + staged + untracked).map { change -> change.toDiffFallbackFile() }
+
+private fun GitFileChange.toDiffFallbackFile(): GitDiffFile =
+    GitDiffFile(
+        path = path,
+        additions = if (status == "added" || status == "untracked") 1 else 0,
+        deletions = if (status == "deleted") 1 else 0,
+        patch = null,
+    )
+
+private fun mergeGitDiffFiles(files: List<GitDiffFile>): List<GitDiffFile> =
+    files
+        .groupBy { it.path }
+        .map { (_, pathFiles) ->
+            pathFiles.reduce { acc, file ->
+                GitDiffFile(
+                    path = acc.path,
+                    additions = maxOf(acc.additions, file.additions),
+                    deletions = maxOf(acc.deletions, file.deletions),
+                    patch = acc.patch ?: file.patch,
+                )
+            }
+        }.sortedBy { it.path }

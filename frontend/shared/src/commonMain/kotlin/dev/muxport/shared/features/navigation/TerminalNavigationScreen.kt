@@ -29,11 +29,15 @@ class TerminalNavigationScreen : Screen {
         var documentFileName by rememberSaveable { mutableStateOf("") }
         var documentContentType by rememberSaveable { mutableStateOf("") }
         var documentContent by rememberSaveable { mutableStateOf("") }
-        var documentViewerSource by rememberSaveable { mutableStateOf<String?>(null) }
+        var documentReturnSource by rememberSaveable { mutableStateOf<String?>(null) }
+        var pendingRestoreSource by rememberSaveable { mutableStateOf<String?>(null) }
 
         BackHandler(enabled = activeView != MainView.Terminal) {
             when (activeView) {
-                MainView.DocumentViewer -> activeView = MainView.TerminalSession
+                MainView.DocumentViewer -> {
+                    pendingRestoreSource = documentReturnSource
+                    activeView = MainView.TerminalSession
+                }
                 else -> activeView = MainView.Terminal
             }
         }
@@ -95,14 +99,14 @@ class TerminalNavigationScreen : Screen {
                                         documentFileName = fileName
                                         documentContentType = contentType
                                         documentContent = content
-                                        documentViewerSource = source
+                                        documentReturnSource = source
                                         activeView = MainView.DocumentViewer
                                     },
                                 )
-                            }
-                        if (documentViewerSource != null) {
-                            terminalScreen.pendingRestorePopover = documentViewerSource
-                            documentViewerSource = null
+                        }
+                        if (pendingRestoreSource != null) {
+                            terminalScreen.requestPopoverRestore(requireNotNull(pendingRestoreSource))
+                            pendingRestoreSource = null
                         }
                         terminalScreen.Content()
                     } else {
@@ -116,7 +120,10 @@ class TerminalNavigationScreen : Screen {
                                 fileName = documentFileName,
                                 contentType = documentContentType,
                                 content = documentContent,
-                                onBack = { activeView = MainView.TerminalSession },
+                                onBack = {
+                                    pendingRestoreSource = documentReturnSource
+                                    activeView = MainView.TerminalSession
+                                },
                             )
                         }
                     documentViewerScreen.Content()
