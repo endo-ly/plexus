@@ -38,6 +38,10 @@ private val FLOATING_CONTROL_RELOCATION_GAP = 16.dp
  * @param onBack 戻るボタン押下時のコールバック
  * @param onPaste 貼り付けボタン押下時のコールバック
  * @param onCopy コピーボタン押下時のコールバック
+ * @param onFiles ファイルブラウザを開くコールバック
+ * @param onDiff Git diff一覧を開くコールバック
+ * @param isGitRepo Gitリポジトリかどうか
+ * @param onDragStart ドラッグ開始時のコールバック
  * @param position 現在のピル位置
  * @param onPositionChange ピル位置が変わった時のコールバック
  * @param bottomObstacleHeightPx キーボードなどで画面下から回避したい高さ
@@ -50,6 +54,10 @@ internal fun DraggableTerminalFloatingControlPill(
     onBack: () -> Unit,
     onPaste: () -> Unit,
     onCopy: () -> Unit,
+    onFiles: () -> Unit = {},
+    onDiff: () -> Unit = {},
+    isGitRepo: Boolean = true,
+    onDragStart: (() -> Unit)? = null,
     position: TerminalFloatingControlPosition?,
     onPositionChange: (TerminalFloatingControlPosition) -> Unit,
     bottomObstacleHeightPx: Float = 0f,
@@ -96,6 +104,9 @@ internal fun DraggableTerminalFloatingControlPill(
             onBack = onBack,
             onPaste = onPaste,
             onCopy = onCopy,
+            onFiles = onFiles,
+            onDiff = onDiff,
+            isGitRepo = isGitRepo,
             modifier =
                 Modifier
                     .alpha(if (bounds.isReady) 1f else 0f)
@@ -121,6 +132,7 @@ internal fun DraggableTerminalFloatingControlPill(
 
                         detectDragGestures(
                             onDragStart = {
+                                onDragStart?.invoke()
                                 dragPosition =
                                     resolveTerminalFloatingControlDisplayPosition(
                                         position = latestPosition,
@@ -213,16 +225,16 @@ internal data class TerminalFloatingControlObstacle(
 /**
  * 初期表示位置を返す。
  *
- * 初期状態では画面下中央に配置する。
+ * 初期状態では画面上中央に配置する。
  *
  * @param bounds 配置可能な境界情報
- * @return 下中央に寄せた初期位置
+ * @return 上中央に寄せた初期位置
  */
 internal fun defaultTerminalFloatingControlPosition(bounds: TerminalFloatingControlBounds): TerminalFloatingControlPosition {
     val minX = bounds.minX()
     val maxX = bounds.maxX()
     val x = (minX + maxX) / 2f
-    val y = bounds.maxY()
+    val y = bounds.minY()
 
     return TerminalFloatingControlPosition(xPx = x, yPx = y)
 }

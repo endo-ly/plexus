@@ -2,6 +2,7 @@ package dev.muxport.shared.features.navigation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,20 +15,32 @@ import dev.muxport.shared.core.platform.PlatformPrefsKeys
 import dev.muxport.shared.features.terminal.agentlist.AgentListScreen
 import dev.muxport.shared.features.terminal.session.TerminalScreen
 import dev.muxport.shared.features.terminal.settings.GatewaySettingsScreen
+import dev.muxport.shared.features.terminal.viewer.DocumentViewerScreen
 import org.koin.compose.koinInject
 
 /**
  * ターミナルナビゲーション画面
  *
- * セッション一覧、ターミナルセッション、Gateway設定の3画面を切り替えるルート画面。
+ * セッション一覧、ターミナルセッション、Gateway設定、ドキュメントビューアの4画面を切り替えるルート画面。
  */
 class TerminalNavigationScreen : Screen {
     @Composable
     override fun Content() {
         var activeView by rememberSaveable { mutableStateOf(MainView.Terminal) }
+        var documentFileName by rememberSaveable { mutableStateOf("") }
+        var documentContentType by rememberSaveable { mutableStateOf("") }
+        var documentContent by rememberSaveable { mutableStateOf("") }
+        var documentReturnSource by rememberSaveable { mutableStateOf<String?>(null) }
+        var pendingRestoreSource by rememberSaveable { mutableStateOf<String?>(null) }
 
         BackHandler(enabled = activeView != MainView.Terminal) {
-            activeView = MainView.Terminal
+            when (activeView) {
+                MainView.DocumentViewer -> {
+                    pendingRestoreSource = documentReturnSource
+                    activeView = MainView.TerminalSession
+                }
+                else -> activeView = MainView.Terminal
+            }
         }
 
         val preferences = koinInject<PlatformPreferences>()
@@ -83,12 +96,41 @@ class TerminalNavigationScreen : Screen {
                                 TerminalScreen(
                                     agentId = lastSessionId,
                                     onClose = { activeView = MainView.Terminal },
+                                    onNavigateToDocumentViewer = { fileName, contentType, content, source ->
+                                        documentFileName = fileName
+                                        documentContentType = contentType
+                                        documentContent = content
+                                        documentReturnSource = source
+                                        activeView = MainView.DocumentViewer
+                                    },
                                 )
                             }
+                        if (pendingRestoreSource != null) {
+                            val source = pendingRestoreSource
+                            SideEffect {
+                                terminalScreen.requestPopoverRestore(requireNotNull(source))
+                                pendingRestoreSource = null
+                            }
+                        }
                         terminalScreen.Content()
                     } else {
                         activeView = MainView.Terminal
                     }
+                }
+                MainView.DocumentViewer -> {
+                    val documentViewerScreen =
+                        remember(documentFileName, documentContentType, documentContent) {
+                            DocumentViewerScreen(
+                                fileName = documentFileName,
+                                contentType = documentContentType,
+                                content = documentContent,
+                                onBack = {
+                                    pendingRestoreSource = documentReturnSource
+                                    activeView = MainView.TerminalSession
+                                },
+                            )
+                        }
+                    documentViewerScreen.Content()
                 }
             }
         }

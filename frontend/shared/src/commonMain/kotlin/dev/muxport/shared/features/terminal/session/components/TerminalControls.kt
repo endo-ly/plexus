@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.CompareArrows
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.ContentPaste
+import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -74,6 +76,9 @@ fun TerminalFloatingControlPill(
     onBack: () -> Unit,
     onPaste: () -> Unit,
     onCopy: () -> Unit,
+    onFiles: () -> Unit = {},
+    onDiff: () -> Unit = {},
+    isGitRepo: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     val dimens = MuxportThemeTokens.dimens
@@ -112,9 +117,41 @@ fun TerminalFloatingControlPill(
                 )
             }
             Spacer(modifier = Modifier.width(dimens.space8))
+            TerminalFilesButton(onClick = onFiles)
+            Spacer(modifier = Modifier.width(dimens.space4))
+            TerminalDiffButton(onClick = onDiff)
+            Spacer(modifier = Modifier.width(dimens.space4))
             TerminalPasteButton(onClick = onPaste)
             Spacer(modifier = Modifier.width(dimens.space4))
             TerminalCopyButton(onClick = onCopy)
         }
+    }
+}
+
+@Composable
+fun TerminalFilesButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier.testTagResourceId(TerminalTestTags.TERMINAL_FILES_BUTTON),
+    ) {
+        Icon(Icons.Filled.FolderOpen, contentDescription = "Files")
+    }
+}
+
+@Composable
+fun TerminalDiffButton(
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    modifier: Modifier = Modifier,
+) {
+    IconButton(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier.testTagResourceId(TerminalTestTags.TERMINAL_DIFF_BUTTON),
+    ) {
+        Icon(Icons.AutoMirrored.Filled.CompareArrows, contentDescription = "Diff")
     }
 }
