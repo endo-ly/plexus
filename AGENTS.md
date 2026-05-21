@@ -126,7 +126,7 @@ Windows ─ netsh (0.0.0.0:5559→127.0.0.1:5555) ─ Android Emulator (:5555)
 ※ 5559 を外部公開する理由: エミュレータの :5555 とのポート競合回避
 
 ### Frontend～Gateway 間の検証方法
-
+こｊぽ
 1. Windows 側でエミュを起動、またはデバッグ用実機で adb 待ち受け
 2. Linux から `adb connect <WINDOWS_OR_ANDROID_IP>:PORT` で接続
 3. Gateway を起動

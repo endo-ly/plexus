@@ -103,7 +103,7 @@ class TerminalNavigationScreen : Screen {
                                         activeView = MainView.DocumentViewer
                                     },
                                 )
-                        }
+                            }
                         if (pendingRestoreSource != null) {
                             terminalScreen.requestPopoverRestore(requireNotNull(pendingRestoreSource))
                             pendingRestoreSource = null

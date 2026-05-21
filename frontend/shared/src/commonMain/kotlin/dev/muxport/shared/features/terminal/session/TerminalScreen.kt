@@ -439,8 +439,16 @@ private fun TerminalContent(
                         val unstagedDiffResult = gitRepository.getDiff(agentId, target = "unstaged", path = path)
                         val stagedDiffResult = gitRepository.getDiff(agentId, target = "staged", path = path)
                         val patch =
-                            unstagedDiffResult.getOrNull()?.files?.firstOrNull()?.patch
-                                ?: stagedDiffResult.getOrNull()?.files?.firstOrNull()?.patch
+                            unstagedDiffResult
+                                .getOrNull()
+                                ?.files
+                                ?.firstOrNull()
+                                ?.patch
+                                ?: stagedDiffResult
+                                    .getOrNull()
+                                    ?.files
+                                    ?.firstOrNull()
+                                    ?.patch
                                 ?: "No diff is available for $path."
                         if (unstagedDiffResult.isSuccess || stagedDiffResult.isSuccess) {
                             onNavigateToDocumentViewer?.invoke(
