@@ -2,6 +2,7 @@ package dev.muxport.shared.features.navigation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -105,8 +106,11 @@ class TerminalNavigationScreen : Screen {
                                 )
                             }
                         if (pendingRestoreSource != null) {
-                            terminalScreen.requestPopoverRestore(requireNotNull(pendingRestoreSource))
-                            pendingRestoreSource = null
+                            val source = pendingRestoreSource
+                            LaunchedEffect(source) {
+                                terminalScreen.requestPopoverRestore(requireNotNull(source))
+                                pendingRestoreSource = null
+                            }
                         }
                         terminalScreen.Content()
                     } else {

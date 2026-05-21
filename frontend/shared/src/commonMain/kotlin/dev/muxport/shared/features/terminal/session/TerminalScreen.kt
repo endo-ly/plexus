@@ -76,8 +76,10 @@ class TerminalScreen(
     override val key: ScreenKey
         get() = "TerminalScreen:$agentId"
 
-    private var pendingRestorePopover: String? = null
-    private var restorePopoverRequestId: Int = 0
+    internal var pendingRestorePopover by mutableStateOf<String?>(null)
+        private set
+    internal var restorePopoverRequestId by mutableStateOf(0)
+        private set
 
     fun requestPopoverRestore(source: String) {
         pendingRestorePopover = source
@@ -86,12 +88,21 @@ class TerminalScreen(
 
     @Composable
     override fun Content() {
+        val restorePopover = pendingRestorePopover
+        val restoreRequestId = restorePopoverRequestId
+
+        LaunchedEffect(restoreRequestId) {
+            if (restorePopover != null) {
+                pendingRestorePopover = null
+            }
+        }
+
         TerminalContent(
             agentId = agentId,
             onClose = onClose,
             onNavigateToDocumentViewer = onNavigateToDocumentViewer,
-            restorePopover = pendingRestorePopover.also { pendingRestorePopover = null },
-            restorePopoverRequestId = restorePopoverRequestId,
+            restorePopover = restorePopover,
+            restorePopoverRequestId = restoreRequestId,
         )
     }
 }
