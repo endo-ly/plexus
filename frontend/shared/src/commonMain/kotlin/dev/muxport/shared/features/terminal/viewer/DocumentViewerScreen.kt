@@ -36,6 +36,7 @@ class DocumentViewerScreen(
     private val fileName: String,
     private val contentType: String,
     private val content: String,
+    private val onBack: (() -> Unit)? = null,
 ) : Screen {
     override val key: ScreenKey
         get() = "DocumentViewerScreen:$fileName:$contentType"
@@ -46,6 +47,7 @@ class DocumentViewerScreen(
             fileName = fileName,
             contentType = contentType,
             content = content,
+            onBack = onBack,
         )
     }
 }
@@ -56,6 +58,7 @@ private fun DocumentViewerContent(
     fileName: String,
     contentType: String,
     content: String,
+    onBack: (() -> Unit)? = null,
 ) {
     val navigator = LocalNavigator.current
     val webView = rememberDocumentWebView()
@@ -95,7 +98,7 @@ private fun DocumentViewerContent(
                 )
             },
             navigationIcon = {
-                IconButton(onClick = { navigator?.pop() }) {
+                IconButton(onClick = { onBack?.invoke() ?: navigator?.pop() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",

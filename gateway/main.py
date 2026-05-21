@@ -102,12 +102,15 @@ def create_app() -> Starlette:
         Route("/health", health_check, methods=["GET"]),
         # Push API
         *push_routes,
-        # Terminal API
-        Mount("/api", routes=get_terminal_routes()),
-        # File Browser API
-        Mount("/api", routes=get_file_routes()),
-        # Git API
-        Mount("/api", routes=get_git_routes()),
+        # Terminal + File Browser + Git API
+        Mount(
+            "/api",
+            routes=[
+                *get_terminal_routes(),
+                *get_file_routes(),
+                *get_git_routes(),
+            ],
+        ),
     ]
 
     app = Starlette(

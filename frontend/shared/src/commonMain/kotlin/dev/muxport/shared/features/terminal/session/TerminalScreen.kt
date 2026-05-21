@@ -70,10 +70,12 @@ private val TERMINAL_KEYBOARD_FOCUS_BUFFER = 16.dp
 class TerminalScreen(
     private val agentId: String,
     private val onClose: (() -> Unit)? = null,
-    private val onNavigateToDocumentViewer: ((fileName: String, contentType: String, content: String) -> Unit)? = null,
+    private val onNavigateToDocumentViewer: ((fileName: String, contentType: String, content: String, source: String) -> Unit)? = null,
 ) : Screen {
     override val key: ScreenKey
         get() = "TerminalScreen:$agentId"
+
+    var pendingRestorePopover: String? = null
 
     @Composable
     override fun Content() {
@@ -81,6 +83,7 @@ class TerminalScreen(
             agentId = agentId,
             onClose = onClose,
             onNavigateToDocumentViewer = onNavigateToDocumentViewer,
+            restorePopover = pendingRestorePopover.also { pendingRestorePopover = null },
         )
     }
 }
@@ -89,7 +92,8 @@ class TerminalScreen(
 private fun TerminalContent(
     agentId: String,
     onClose: (() -> Unit)? = null,
-    onNavigateToDocumentViewer: ((fileName: String, contentType: String, content: String) -> Unit)? = null,
+    onNavigateToDocumentViewer: ((fileName: String, contentType: String, content: String, source: String) -> Unit)? = null,
+    restorePopover: String? = null,
 ) {
     val navigator = requireNotNull(LocalNavigator.current)
     val webView = rememberTerminalWebView()
@@ -113,8 +117,8 @@ private fun TerminalContent(
     var isCopyModeOpen by remember { mutableStateOf(false) }
     var keyboardAccessoryHeightPx by remember { mutableIntStateOf(0) }
     var floatingControlPosition by remember(agentId) { mutableStateOf<TerminalFloatingControlPosition?>(null) }
-    var showFileBrowser by remember { mutableStateOf(false) }
-    var showGitDiff by remember { mutableStateOf(false) }
+    var showFileBrowser by remember { mutableStateOf(restorePopover == "files") }
+    var showGitDiff by remember { mutableStateOf(restorePopover == "diff") }
     var showHiddenFiles by remember { mutableStateOf(false) }
     var currentBrowsePath by remember { mutableStateOf(".") }
     var fileBrowserEntries by remember { mutableStateOf(emptyList<FileBrowseEntry>()) }
@@ -375,6 +379,7 @@ private fun TerminalContent(
                                     path.substringAfterLast("/"),
                                     fileResult.language,
                                     fileResult.content,
+                                    "files",
                                 )
                             }
                     }
@@ -401,6 +406,7 @@ private fun TerminalContent(
                                 path.substringAfterLast("/"),
                                 "diff",
                                 patch,
+                                "diff",
                             )
                         }
                     }

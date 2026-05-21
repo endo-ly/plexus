@@ -29,9 +29,13 @@ class TerminalNavigationScreen : Screen {
         var documentFileName by rememberSaveable { mutableStateOf("") }
         var documentContentType by rememberSaveable { mutableStateOf("") }
         var documentContent by rememberSaveable { mutableStateOf("") }
+        var documentViewerSource by rememberSaveable { mutableStateOf<String?>(null) }
 
         BackHandler(enabled = activeView != MainView.Terminal) {
-            activeView = MainView.Terminal
+            when (activeView) {
+                MainView.DocumentViewer -> activeView = MainView.TerminalSession
+                else -> activeView = MainView.Terminal
+            }
         }
 
         val preferences = koinInject<PlatformPreferences>()
@@ -87,14 +91,19 @@ class TerminalNavigationScreen : Screen {
                                 TerminalScreen(
                                     agentId = lastSessionId,
                                     onClose = { activeView = MainView.Terminal },
-                                    onNavigateToDocumentViewer = { fileName, contentType, content ->
+                                    onNavigateToDocumentViewer = { fileName, contentType, content, source ->
                                         documentFileName = fileName
                                         documentContentType = contentType
                                         documentContent = content
+                                        documentViewerSource = source
                                         activeView = MainView.DocumentViewer
                                     },
                                 )
                             }
+                        if (documentViewerSource != null) {
+                            terminalScreen.pendingRestorePopover = documentViewerSource
+                            documentViewerSource = null
+                        }
                         terminalScreen.Content()
                     } else {
                         activeView = MainView.Terminal
@@ -107,6 +116,7 @@ class TerminalNavigationScreen : Screen {
                                 fileName = documentFileName,
                                 contentType = documentContentType,
                                 content = documentContent,
+                                onBack = { activeView = MainView.TerminalSession },
                             )
                         }
                     documentViewerScreen.Content()
