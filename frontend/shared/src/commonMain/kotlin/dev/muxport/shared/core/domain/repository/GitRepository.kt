@@ -6,7 +6,7 @@ import dev.muxport.shared.core.domain.model.git.GitLogResponse
 import dev.muxport.shared.core.domain.model.git.GitStatusResponse
 
 /**
- * Git Repository
+ * Gitリポジトリ
  *
  * Gitステータス・差分・ログ・コミット詳細の取得を担当します。
  */

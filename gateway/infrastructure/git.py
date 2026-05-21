@@ -192,6 +192,23 @@ def _parse_status_v2_line(
             unstaged = FileChange(path=path, status=_STATUS_MAP[y])
         return "", staged, unstaged, None
 
+    if line.startswith("2 "):
+        # 2 <xy> <sub> <mH> <mI> <mW> <hH> <hI> <X><score> <path> <origPath>
+        parts = line.split()
+        if len(parts) < 11:
+            return "", None, None, None
+        xy = parts[1]
+        path = parts[9]
+        staged = None
+        unstaged = None
+        x = xy[0]
+        y = xy[1]
+        if x in _STATUS_MAP and x != ".":
+            staged = FileChange(path=path, status=_STATUS_MAP[x])
+        if y in _STATUS_MAP and y != ".":
+            unstaged = FileChange(path=path, status=_STATUS_MAP[y])
+        return "", staged, unstaged, None
+
     if line.startswith("? "):
         path = line[2:]
         return "", None, None, path
@@ -228,7 +245,7 @@ def _parse_diff_stat(stat_output: str) -> list[tuple[str, int, int]]:
     return results
 
 
-_NUMSTAT_PATTERN = re.compile(r"^(\d+)\t(\d+)\t(.+)$")
+_NUMSTAT_PATTERN = re.compile(r"^(\d+|-)\t(\d+|-)\t(.+)$")
 
 
 def _parse_numstat(numstat_output: str) -> list[tuple[str, int, int]]:

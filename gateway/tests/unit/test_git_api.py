@@ -9,6 +9,7 @@ from contextlib import ExitStack
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+from starlette.exceptions import HTTPException
 
 from gateway.infrastructure.git import (
     DiffFile,
@@ -120,7 +121,7 @@ class TestGitStatus:
             from gateway.api.git import git_status
 
             # Act & Assert
-            with pytest.raises(Exception) as exc_info:
+            with pytest.raises(HTTPException) as exc_info:
                 await git_status(request)
             assert exc_info.value.status_code == 422
             assert exc_info.value.detail == "not_a_git_repo"
@@ -136,7 +137,7 @@ class TestGitStatus:
             from gateway.api.git import git_status
 
             # Act & Assert
-            with pytest.raises(Exception) as exc_info:
+            with pytest.raises(HTTPException) as exc_info:
                 await git_status(request)
             assert exc_info.value.status_code == 404
             assert exc_info.value.detail == "session_not_found"
@@ -334,7 +335,7 @@ class TestGitDiff:
             from gateway.api.git import git_diff
 
             # Act & Assert
-            with pytest.raises(Exception) as exc_info:
+            with pytest.raises(HTTPException) as exc_info:
                 await git_diff(request)
             assert exc_info.value.status_code == 422
             assert exc_info.value.detail == "not_a_git_repo"
@@ -421,7 +422,7 @@ class TestGitLog:
             from gateway.api.git import git_log
 
             # Act & Assert
-            with pytest.raises(Exception) as exc_info:
+            with pytest.raises(HTTPException) as exc_info:
                 await git_log(request)
             assert exc_info.value.status_code == 422
             assert exc_info.value.detail == "not_a_git_repo"
@@ -490,7 +491,7 @@ class TestGitCommitDetail:
             from gateway.api.git import git_commit_detail
 
             # Act & Assert
-            with pytest.raises(Exception) as exc_info:
+            with pytest.raises(HTTPException) as exc_info:
                 await git_commit_detail(request)
             assert exc_info.value.status_code == 404
             assert exc_info.value.detail == "commit_not_found"
@@ -512,7 +513,7 @@ class TestGitCommitDetail:
             from gateway.api.git import git_commit_detail
 
             # Act & Assert
-            with pytest.raises(Exception) as exc_info:
+            with pytest.raises(HTTPException) as exc_info:
                 await git_commit_detail(request)
             assert exc_info.value.status_code == 422
             assert exc_info.value.detail == "not_a_git_repo"

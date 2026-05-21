@@ -161,7 +161,9 @@ async def git_log(request: Request) -> JSONResponse:
     try:
         count = int(count_str)
     except ValueError:
-        count = 10
+        raise HTTPException(status_code=400, detail="invalid_count: must be an integer") from None
+    if count <= 0:
+        raise HTTPException(status_code=400, detail="invalid_count: must be > 0")
 
     try:
         entries = await anyio.to_thread.run_sync(

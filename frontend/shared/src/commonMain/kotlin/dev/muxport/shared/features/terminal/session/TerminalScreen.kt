@@ -115,6 +115,7 @@ private fun TerminalContent(
     var floatingControlPosition by remember(agentId) { mutableStateOf<TerminalFloatingControlPosition?>(null) }
     var showFileBrowser by remember { mutableStateOf(false) }
     var showGitDiff by remember { mutableStateOf(false) }
+    var showHiddenFiles by remember { mutableStateOf(false) }
     var currentBrowsePath by remember { mutableStateOf(".") }
     var fileBrowserEntries by remember { mutableStateOf(emptyList<FileBrowseEntry>()) }
     var isGitRepo by remember { mutableStateOf(false) }
@@ -137,6 +138,14 @@ private fun TerminalContent(
 
     LaunchedEffect(agentId) {
         preferences.putString(PlatformPrefsKeys.KEY_LAST_TERMINAL_SESSION, agentId)
+        val statusResult = gitRepository.getStatus(agentId)
+        statusResult
+            .onSuccess { status ->
+                isGitRepo = true
+                gitStatus = status
+            }.onFailure {
+                isGitRepo = false
+            }
     }
 
     LaunchedEffect(showFileBrowser, currentBrowsePath) {
@@ -372,8 +381,8 @@ private fun TerminalContent(
                 },
                 onBreadcrumbClick = { path -> currentBrowsePath = path },
                 onDismiss = { showFileBrowser = false },
-                showHidden = false,
-                onShowHiddenChange = {},
+                showHidden = showHiddenFiles,
+                onShowHiddenChange = { showHiddenFiles = it },
                 isLoading = isLoadingFiles,
             )
         }
@@ -385,20 +394,15 @@ private fun TerminalContent(
                 onFileClick = { path ->
                     showGitDiff = false
                     coroutineScope.launch {
-                        val readResult = fileRepository.readFile(agentId, path = path)
-                        readResult
-                            .onSuccess { fileResult ->
-                                val diffResult = gitRepository.getDiff(agentId, path = path)
-                                diffResult
-                                    .onSuccess { diff ->
-                                        val patch = diff.files.firstOrNull()?.patch ?: ""
-                                        onNavigateToDocumentViewer?.invoke(
-                                            path.substringAfterLast("/"),
-                                            "diff",
-                                            patch,
-                                        )
-                                    }
-                            }
+                        val diffResult = gitRepository.getDiff(agentId, path = path)
+                        diffResult.onSuccess { diff ->
+                            val patch = diff.files.firstOrNull()?.patch ?: ""
+                            onNavigateToDocumentViewer?.invoke(
+                                path.substringAfterLast("/"),
+                                "diff",
+                                patch,
+                            )
+                        }
                     }
                 },
                 onDismiss = { showGitDiff = false },

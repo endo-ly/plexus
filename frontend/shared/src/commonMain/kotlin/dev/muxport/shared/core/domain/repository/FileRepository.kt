@@ -4,7 +4,7 @@ import dev.muxport.shared.core.domain.model.file.FileBrowseResponse
 import dev.muxport.shared.core.domain.model.file.FileReadResult
 
 /**
- * File Repository
+ * ファイルリポジトリ
  *
  * ファイルブラウズ・ファイル読み取りを担当します。
  */

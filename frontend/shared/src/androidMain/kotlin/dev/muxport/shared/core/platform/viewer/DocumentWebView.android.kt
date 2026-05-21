@@ -19,6 +19,9 @@ class AndroidDocumentWebView(
     private val context: Context,
 ) : DocumentWebView {
     private val internalWebView: WebView by lazy { createWebView() }
+    private var isViewerLoaded = false
+    private var pendingRender: Pair<String, String>? = null
+    private var pendingDarkMode: Boolean? = null
 
     private fun createWebView(): WebView =
         WebView(context).apply {
@@ -38,10 +41,26 @@ class AndroidDocumentWebView(
                         }
                         return super.shouldInterceptRequest(view, request)
                     }
+
+                    override fun onPageFinished(
+                        view: WebView?,
+                        url: String?,
+                    ) {
+                        if (url?.endsWith(VIEWER_HTML_ASSET_PATH) == true) {
+                            isViewerLoaded = true
+                            pendingDarkMode?.let { setTheme(it) }
+                            pendingRender?.let { (type, content) ->
+                                render(type, content)
+                            }
+                            pendingDarkMode = null
+                            pendingRender = null
+                        }
+                    }
                 }
         }
 
     override fun loadViewer() {
+        isViewerLoaded = false
         internalWebView.loadUrl(VIEWER_HTML_ASSET_URL)
     }
 
@@ -49,12 +68,20 @@ class AndroidDocumentWebView(
         contentType: String,
         content: String,
     ) {
+        if (!isViewerLoaded) {
+            pendingRender = contentType to content
+            return
+        }
         val escapedContent = escapeJsTemplateLiteral(content)
         val escapedType = escapeJsString(contentType)
         internalWebView.evaluateJavascript("render('$escapedType', `$escapedContent`)", null)
     }
 
     override fun setTheme(darkMode: Boolean) {
+        if (!isViewerLoaded) {
+            pendingDarkMode = darkMode
+            return
+        }
         val dark = if (darkMode) "true" else "false"
         internalWebView.evaluateJavascript("setTheme($dark)", null)
     }

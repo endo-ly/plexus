@@ -102,7 +102,7 @@ class TerminalNavigationScreen : Screen {
                 }
                 MainView.DocumentViewer -> {
                     val documentViewerScreen =
-                        remember(documentFileName) {
+                        remember(documentFileName, documentContentType, documentContent) {
                             DocumentViewerScreen(
                                 fileName = documentFileName,
                                 contentType = documentContentType,

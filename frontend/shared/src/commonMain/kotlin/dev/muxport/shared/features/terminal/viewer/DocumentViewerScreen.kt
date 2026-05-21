@@ -38,7 +38,7 @@ class DocumentViewerScreen(
     private val content: String,
 ) : Screen {
     override val key: ScreenKey
-        get() = "DocumentViewerScreen:$fileName"
+        get() = "DocumentViewerScreen:$fileName:$contentType"
 
     @Composable
     override fun Content() {

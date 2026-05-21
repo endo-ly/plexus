@@ -90,9 +90,9 @@ function renderDiff(text) {
     for (var i = 0; i < lines.length; i++) {
         var escaped = escapeHtml(lines[i]);
         if (lines[i].startsWith('+') && !lines[i].startsWith('+++')) {
-            html += '<div class="diff-add">' + escaped + '</div>';
+            html += '<span class="diff-add">' + escaped + '</span>\n';
         } else if (lines[i].startsWith('-') && !lines[i].startsWith('---')) {
-            html += '<div class="diff-del">' + escaped + '</div>';
+            html += '<span class="diff-del">' + escaped + '</span>\n';
         } else {
             html += escaped + '\n';
         }

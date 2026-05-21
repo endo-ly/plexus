@@ -106,6 +106,20 @@ fun GitDiffPopover(
                             modifier = Modifier.size(dimens.space32),
                         )
                     }
+                } else if (diffFiles.isEmpty()) {
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = "No changes",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 } else {
                     LazyColumn(
                         modifier = Modifier.weight(1f),
@@ -118,22 +132,6 @@ fun GitDiffPopover(
                             GitDiffFileRow(
                                 diffFile = diffFile,
                                 onFileClick = onFileClick,
-                            )
-                        }
-                    }
-
-                    if (diffFiles.isEmpty() && !isLoading) {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Text(
-                                text = "No changes",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     }

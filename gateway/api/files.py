@@ -260,8 +260,17 @@ async def read_file(request: Request) -> JSONResponse:
     if not requested_path:
         raise HTTPException(status_code=400, detail="invalid_path: path is required")
 
-    offset = int(request.query_params.get("offset", "0"))
-    limit = int(request.query_params.get("limit", str(MAX_FILE_SIZE)))
+    try:
+        offset = int(request.query_params.get("offset", "0"))
+        limit = int(request.query_params.get("limit", str(MAX_FILE_SIZE)))
+    except ValueError:
+        raise HTTPException(status_code=400, detail="invalid_offset: must be an integer") from None
+
+    if offset < 0:
+        raise HTTPException(status_code=400, detail="invalid_offset: must be >= 0")
+    if limit <= 0:
+        raise HTTPException(status_code=400, detail="invalid_limit: must be > 0")
+    limit = min(limit, MAX_FILE_SIZE)
 
     # パス検証
     try:
